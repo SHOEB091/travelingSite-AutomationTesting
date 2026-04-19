@@ -14,9 +14,10 @@ import org.openqa.selenium.WebDriver;
 
 /**
  * Hooks - Cucumber lifecycle hooks.
- * - @Before: starts browser + Extent test node
- * - @AfterStep: takes screenshot after every step (attached to report)
- * - @After: marks test pass/fail, takes final screenshot, flushes report, closes browser
+ *
+ * Browser is kept open across all scenarios.
+ * After each scenario we just navigate back to the home page.
+ * The browser quits automatically via the JVM shutdown hook in DriverManager.
  */
 public class Hooks {
 
@@ -54,13 +55,12 @@ public class Hooks {
 
         ExtentReportManager.flushReports();
 
-        // Quit after each scenario so the next one starts with a fresh browser
-        DriverManager.quitDriver();
+        // Navigate back to home page for the next scenario (browser stays open)
+        DriverManager.goHome();
     }
 
     @AfterStep
     public void afterEachStep(Scenario scenario) {
-        // Only take screenshots if driver is still alive
         try {
             WebDriver driver = DriverManager.getDriver();
             String screenshotPath = ScreenshotUtils.takeScreenshot(driver, "step");
@@ -70,7 +70,7 @@ public class Hooks {
                         MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
             }
         } catch (Exception e) {
-            // Silently skip if driver not available
+            // Silently skip
         }
     }
 }

@@ -1,0 +1,148 @@
+🔴 Root Problems in Your Automation
+1. ❗ StaleElementReferenceException (Cabs – From field)
+
+This happens because:
+
+Goibibo re-renders DOM after click/typing
+Your stored WebElement becomes invalid
+
+👉 Example from your log:
+
+stale element not found in the current frame
+✅ Fix
+
+Never reuse WebElement after page updates.
+
+❌ Wrong:
+
+WebElement from = driver.findElement(...);
+from.clear();
+from.sendKeys("Delhi");
+
+✅ Correct:
+
+By fromLocator = By.xpath("//input[contains(@placeholder,'From')]");
+
+wait.until(ExpectedConditions.elementToBeClickable(fromLocator)).click();
+WebElement from = wait.until(ExpectedConditions.visibilityOfElementLocated(fromLocator));
+from.clear();
+from.sendKeys("Delhi");
+2. ❗ TimeoutException (element not clickable)
+
+Example:
+
+waiting for element to be clickable
+Why?
+Element inside overlay/modal
+Element not yet visible
+Wrong locator
+3. ❗ Goibibo uses dynamic UI (React)
+
+This is the biggest problem.
+
+Things happening:
+
+DOM refresh after every action
+Elements appear/disappear
+IDs/classes change dynamically
+Hidden inputs used
+🟡 FIX YOUR LOCATORS (Most Important)
+
+Your XPath is too generic and unreliable:
+
+//input[@placeholder[contains(.,'From')]]
+
+👉 This breaks easily.
+
+✅ Better Locators for Goibibo
+FROM field:
+//input[@type='text' and contains(@placeholder,'From')]
+
+OR safer:
+
+(//input[@type='text'])[1]
+Suggestions:
+//ul//li//span[contains(text(),'Delhi')]
+Outstation One-way:
+//span[text()='Outstation']/ancestor::div[contains(@class,'tab')] 
+Hotels search:
+//input[@type='text' and contains(@placeholder,'City')]
+Login button:
+//span[contains(text(),'Login')]
+
+⚠️ Avoid:
+
+//*[contains(text(),'Login') and contains(text(),'Signup')]
+
+👉 Too complex + unreliable
+
+🟢 HANDLE POPUPS (CRITICAL)
+
+Goibibo ALWAYS shows overlays.
+
+👉 If you don’t close them → NOTHING works.
+
+✅ Add this utility
+public void closePopupIfPresent() {
+    try {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebElement closeBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(
+            By.xpath("//span[@role='presentation'] | //span[contains(@class,'close')]")
+        ));
+        closeBtn.click();
+        System.out.println("Popup closed");
+    } catch (Exception e) {
+        System.out.println("No popup");
+    }
+}
+
+👉 Call this after opening site and after navigation.
+
+🔵 FIX STALE ELEMENT PROPERLY
+
+Use retry logic:
+
+public void enterText(By locator, String value) {
+    for (int i = 0; i < 3; i++) {
+        try {
+            WebElement element = wait.until(ExpectedConditions.elementToBeClickable(locator));
+            element.clear();
+            element.sendKeys(value);
+            return;
+        } catch (StaleElementReferenceException e) {
+            System.out.println("Retrying due to stale element...");
+        }
+    }
+}
+🟣 WAIT STRATEGY (YOU MUST CHANGE THIS)
+❌ Wrong:
+Only implicit wait
+Direct click
+✅ Correct:
+
+Use:
+
+WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
+Then ALWAYS:
+
+wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+wait.until(ExpectedConditions.elementToBeClickable(locator));
+🟠 CDP WARNING (Ignore)
+Unable to find CDP implementation matching 147
+
+👉 This is NOT breaking your test
+👉 Safe to ignore OR fix by adding:
+
+<dependency>
+  <groupId>org.seleniumhq.selenium</groupId>
+  <artifactId>selenium-devtools-v147</artifactId>
+  <version>4.20.0</version>
+</dependency>
+🔴 WHY ALL YOUR TESTS FAIL?
+Summary:
+Issue	Reason
+StaleElement	DOM refresh
+Timeout	wrong locator / popup
+NoSuchElement	dynamic UI
+Click not working	overlay blocking

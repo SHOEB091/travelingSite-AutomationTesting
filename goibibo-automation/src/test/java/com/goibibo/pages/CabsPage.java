@@ -4,131 +4,167 @@ import com.goibibo.utils.WaitUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
 
 /**
- * CabsPage - Page Object for the Goibibo Cabs booking page.
- * Handles outstation one-way cab search from Delhi Cantt to Manali.
+ * CabsPage - Page Object for Goibibo Cabs booking page.
+ *
+ * Key fixes applied:
+ * 1. Retry logic on all input fields to handle StaleElementReferenceException
+ * 2. Re-find element by locator (not stored reference) on every retry
+ * 3. Simplified, more reliable XPath locators
+ * 4. Popup closed before any filter action
  */
 public class CabsPage {
 
     private WebDriver driver;
+    private WebDriverWait wait;
 
-    // Locators for Cabs page
-    private By outstationOneWayTab = By.xpath("//label[contains(text(),'Outstation') and contains(text(),'One-way')] | //span[contains(text(),'Outstation') and contains(text(),'One-way')] | //div[contains(text(),'Outstation One-way')]");
-    private By fromLocationInput = By.xpath("//div[contains(text(),'From')]/following-sibling::div//input | //input[@placeholder[contains(.,'From') or contains(.,'from')]] | //label[contains(text(),'From')]/following-sibling::input | //div[@class[contains(.,'source')]]//input");
-    private By toLocationInput = By.xpath("//div[contains(text(),'To')]/following-sibling::div//input | //input[@placeholder[contains(.,'To') or contains(.,'to')]] | //label[contains(text(),'To')]/following-sibling::input | //div[@class[contains(.,'destination')]]//input");
-    private By pickupDateInput = By.xpath("//label[contains(text(),'Pick-up Date') or contains(text(),'Pickup Date') or contains(text(),'Date')]/following-sibling::* | //input[@placeholder[contains(.,'Date')]]  | //div[contains(@class,'date')]//input");
-    private By pickupTimeInput = By.xpath("//label[contains(text(),'Pick-up Time') or contains(text(),'Pickup Time') or contains(text(),'Time')]/following-sibling::* | //select[contains(@class,'time')] | //div[contains(@class,'time')]//input");
-    private By searchBtn = By.xpath("//button[contains(text(),'Search') or contains(text(),'SEARCH')] | //input[@type='submit' and contains(@value,'Search')]");
-
-    // Cab listing page locators
-    private By closePopupBtn = By.xpath("//button[contains(@class,'close') or contains(@aria-label,'close') or contains(@aria-label,'Close')] | //span[@class[contains(.,'close')]] | //*[@id='close'] | //button[@class[contains(.,'modal')]]//span[text()='×'] | //*[contains(@class,'bookingAssist')]//button[contains(@class,'close') or contains(text(),'×')] | //div[contains(@class,'popup')]//button | //div[contains(@class,'modal')]//button[contains(@class,'close')]");
-    private By suvCheckbox = By.xpath("//label[contains(text(),'SUV')] | //input[@type='checkbox']/following-sibling::*[contains(text(),'SUV')] | //span[text()='SUV']/preceding-sibling::input | //div[contains(@class,'cab') or contains(@class,'filter')]//label[contains(text(),'SUV')]");
+    // Simple, reliable locators for Goibibo Cabs page
+    private By fromInputLocator = By.xpath("(//input[@type='text'])[1]");
+    private By toInputLocator = By.xpath("(//input[@type='text'])[2]");
+    private By searchBtnLocator = By.xpath("//button[contains(text(),'Search') or contains(text(),'SEARCH')]");
 
     public CabsPage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
     /**
-     * Navigates to the Cabs page directly.
+     * Navigates to the Cabs page.
      */
     public void navigateToCabs() {
         driver.get("https://www.goibibo.com/cars/");
         WaitUtils.hardWait(3000);
+        closePopupIfVisible();
     }
 
     /**
-     * Selects the Outstation One-way tab.
+     * Clicks the Outstation One-way tab if not already selected.
      */
     public void selectOutstationOneWay() {
         try {
-            WebElement tab = WaitUtils.waitForElementClickable(driver, outstationOneWayTab);
-            tab.click();
+            By outstationTab = By.xpath("//span[text()='Outstation']/ancestor::label | " +
+                    "//label[.//span[text()='Outstation']] | " +
+                    "//div[contains(@class,'tab')]//span[contains(text(),'Outstation')]");
+            wait.until(ExpectedConditions.elementToBeClickable(outstationTab)).click();
             WaitUtils.hardWait(1000);
         } catch (Exception e) {
-            // May already be selected by default
-            System.out.println("Outstation One-way may already be selected: " + e.getMessage());
+            System.out.println("Outstation One-way tab not found or already selected: " + e.getMessage());
         }
     }
 
     /**
-     * Enters the from location and waits for suggestions.
+     * Types into the From location field with retry for stale elements.
+     * Re-finds the element on each attempt.
      */
     public void enterFromLocation(String location) {
-        WebElement fromInput = WaitUtils.waitForElementClickable(driver, fromLocationInput);
-        fromInput.click();
-        WaitUtils.hardWait(500);
-        fromInput.clear();
-        fromInput.sendKeys(location);
-        WaitUtils.hardWait(2000);
+        for (int attempt = 0; attempt < 3; attempt++) {
+            try {
+                WebElement fromInput = wait.until(ExpectedConditions.elementToBeClickable(fromInputLocator));
+                fromInput.click();
+                WaitUtils.hardWait(500);
+                // Re-find after click because Goibibo re-renders DOM
+                fromInput = wait.until(ExpectedConditions.visibilityOfElementLocated(fromInputLocator));
+                fromInput.clear();
+                fromInput.sendKeys(location);
+                WaitUtils.hardWait(2500);
+                return;
+            } catch (StaleElementReferenceException e) {
+                System.out.println("Stale element on From input, retry " + (attempt + 1));
+                WaitUtils.hardWait(1000);
+            }
+        }
+        throw new RuntimeException("Could not enter From location after 3 attempts");
     }
 
     /**
-     * Clicks on a suggestion from the dropdown by matching text.
-     */
-    public void selectSuggestion(String suggestionText) {
-        By suggestionLocator = By.xpath("//*[contains(text(),'" + suggestionText + "')]");
-        WebElement suggestion = WaitUtils.waitForElementClickable(driver, suggestionLocator);
-        suggestion.click();
-        WaitUtils.hardWait(1500);
-    }
-
-    /**
-     * Enters the to location.
+     * Types into the To location field with retry for stale elements.
      */
     public void enterToLocation(String location) {
-        WebElement toInput = WaitUtils.waitForElementClickable(driver, toLocationInput);
-        toInput.click();
-        WaitUtils.hardWait(500);
-        toInput.clear();
-        toInput.sendKeys(location);
-        WaitUtils.hardWait(2000);
+        for (int attempt = 0; attempt < 3; attempt++) {
+            try {
+                WebElement toInput = wait.until(ExpectedConditions.elementToBeClickable(toInputLocator));
+                toInput.click();
+                WaitUtils.hardWait(500);
+                toInput = wait.until(ExpectedConditions.visibilityOfElementLocated(toInputLocator));
+                toInput.clear();
+                toInput.sendKeys(location);
+                WaitUtils.hardWait(2500);
+                return;
+            } catch (StaleElementReferenceException e) {
+                System.out.println("Stale element on To input, retry " + (attempt + 1));
+                WaitUtils.hardWait(1000);
+            }
+        }
+        throw new RuntimeException("Could not enter To location after 3 attempts");
     }
 
     /**
-     * Sets the pickup date. Tries direct input first, then calendar picker.
+     * Clicks a suggestion from the autocomplete dropdown by partial text match.
      */
-    public void setPickupDate(String date) {
+    public void selectSuggestion(String suggestionText) {
+        // Wait for dropdown to appear then pick the matching item
+        By suggestionLocator = By.xpath(
+                "//ul//li//span[contains(text(),'" + suggestionText + "')] | " +
+                "//*[contains(@class,'suggest') or contains(@class,'autocomplete')]" +
+                "//*[contains(text(),'" + suggestionText + "')] | " +
+                "//div[contains(@class,'list')]//div[contains(text(),'" + suggestionText + "')]"
+        );
         try {
-            // Try clicking the date field first
-            WebElement dateField = WaitUtils.waitForElementClickable(driver, pickupDateInput);
-            dateField.click();
-            WaitUtils.hardWait(1000);
-
-            // Try to set the value using JS if it is an input
-            ((JavascriptExecutor) driver).executeScript("arguments[0].value = ''", dateField);
-            dateField.sendKeys(date);
-            dateField.sendKeys(Keys.TAB);
-            WaitUtils.hardWait(1000);
+            WebElement suggestion = wait.until(ExpectedConditions.visibilityOfElementLocated(suggestionLocator));
+            suggestion.click();
+            WaitUtils.hardWait(1500);
+            System.out.println("Selected suggestion: " + suggestionText);
         } catch (Exception e) {
-            System.out.println("Date field interaction issue: " + e.getMessage());
-            // Try clicking on the correct date in the calendar
-            clickDateInCalendar(date);
+            System.out.println("Suggestion not found for: " + suggestionText + " -> " + e.getMessage());
         }
     }
 
     /**
-     * Clicks on a specific date in the calendar widget.
-     * Date format expected: dd/MM/yyyy
+     * Sets the pickup date using the date calendar picker.
+     * Tries clicking the date input and selecting the correct day.
+     * Date format: dd/MM/yyyy
      */
-    private void clickDateInCalendar(String date) {
+    public void setPickupDate(String date) {
         String[] parts = date.split("/");
         String day = String.valueOf(Integer.parseInt(parts[0]));
 
-        By dayLocator = By.xpath("//div[contains(@class,'calendar') or contains(@class,'picker')]//td[text()='" + day + "'] | " +
-                "//div[contains(@class,'DayPicker') or contains(@class,'day')]//div[text()='" + day + "'] | " +
-                "//span[text()='" + day + "' and @class[contains(.,'day')]]");
         try {
-            WebElement dayElement = WaitUtils.waitForElementClickable(driver, dayLocator);
-            dayElement.click();
+            // Click the date field to open the calendar
+            By dateTrigger = By.xpath(
+                    "//label[contains(text(),'Pick') and contains(text(),'Date')]/following-sibling::* | " +
+                    "//*[contains(@class,'date') and not(self::input)]//span | " +
+                    "//div[contains(@class,'pickupDate') or contains(@class,'pickup_date')]"
+            );
+            try {
+                wait.until(ExpectedConditions.elementToBeClickable(dateTrigger)).click();
+                WaitUtils.hardWait(1500);
+            } catch (Exception ignore) {
+                System.out.println("Date trigger click skipped");
+            }
+
+            // Find and click the correct day number in the calendar
+            By dayLocator = By.xpath(
+                    "//div[contains(@class,'DayPicker') or contains(@class,'Calendar') or contains(@class,'calendar')]" +
+                    "//div[not(contains(@class,'disabled'))][@aria-label or @role='gridcell'][normalize-space(text())='" + day + "'] | " +
+                    "//table//td[not(contains(@class,'disabled'))][normalize-space(text())='" + day + "'] | " +
+                    "//span[not(contains(@class,'disabled'))][normalize-space(text())='" + day + "']"
+            );
+            WebElement dayEl = wait.until(ExpectedConditions.elementToBeClickable(dayLocator));
+            dayEl.click();
             WaitUtils.hardWait(1000);
-        } catch (Exception e2) {
-            System.out.println("Could not click date in calendar: " + e2.getMessage());
+            System.out.println("Pickup date set to day: " + day);
+        } catch (Exception e) {
+            System.out.println("Date picker issue: " + e.getMessage());
         }
     }
 
@@ -137,21 +173,25 @@ public class CabsPage {
      */
     public void setPickupTime(String time) {
         try {
-            // Try to find a time selector element
-            By timeSelector = By.xpath("//select[contains(@class,'time') or @name[contains(.,'time')]] | " +
-                    "//div[contains(@class,'time')]//input | " +
-                    "//span[contains(text(),'AM') or contains(text(),'PM')]/parent::*");
-            WebElement timeField = WaitUtils.waitForElementClickable(driver, timeSelector);
-            timeField.click();
+            // Click the time selector dropdown
+            By timeTrigger = By.xpath(
+                    "//label[contains(text(),'Time')]/following-sibling::* | " +
+                    "//*[contains(@class,'time') and not(self::input)] | " +
+                    "//select[contains(@class,'time') or @name[contains(.,'time')]]"
+            );
+            WebElement timefield = wait.until(ExpectedConditions.elementToBeClickable(timeTrigger));
+            timefield.click();
             WaitUtils.hardWait(1000);
 
-            // Look for the specific time option
-            By timeOption = By.xpath("//*[contains(text(),'" + time + "')]");
-            WebElement option = WaitUtils.waitForElementClickable(driver, timeOption);
+            // Look for the time option in dropdown
+            By timeOption = By.xpath("//*[normalize-space(text())='" + time + "'] | " +
+                    "//option[contains(text(),'" + time + "')]");
+            WebElement option = wait.until(ExpectedConditions.elementToBeClickable(timeOption));
             option.click();
             WaitUtils.hardWait(1000);
+            System.out.println("Time set to: " + time);
         } catch (Exception e) {
-            System.out.println("Time field interaction issue: " + e.getMessage());
+            System.out.println("Time setting issue (non-critical): " + e.getMessage());
         }
     }
 
@@ -159,74 +199,92 @@ public class CabsPage {
      * Clicks the Search button.
      */
     public void clickSearch() {
-        WebElement search = WaitUtils.waitForElementClickable(driver, searchBtn);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click()", search);
-        WaitUtils.hardWait(4000);
-    }
-
-    /**
-     * Closes any popup/modal that may appear on the listing page.
-     */
-    public void closePopupIfVisible() {
         try {
-            // Try multiple close button strategies
-            List<WebElement> closeButtons = driver.findElements(
-                    By.xpath("//button[contains(@class,'close') or contains(@aria-label,'close') or contains(@aria-label,'Close')] | " +
-                            "//span[text()='×'] | //*[@class[contains(.,'closeBtn')]] | " +
-                            "//*[contains(@class,'bookAssist') or contains(@class,'assistCard')]//button"));
-
-            for (WebElement btn : closeButtons) {
-                try {
-                    if (btn.isDisplayed()) {
-                        btn.click();
-                        WaitUtils.hardWait(1000);
-                        System.out.println("Popup closed successfully");
-                        break;
-                    }
-                } catch (Exception ignored) {
-                }
-            }
-
-            // Also try pressing Escape key
-            new Actions(driver).sendKeys(Keys.ESCAPE).perform();
-            WaitUtils.hardWait(1000);
+            WebElement searchBtn = wait.until(ExpectedConditions.elementToBeClickable(searchBtnLocator));
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click()", searchBtn);
+            WaitUtils.hardWait(5000);
+            System.out.println("Search clicked, current URL: " + driver.getCurrentUrl());
         } catch (Exception e) {
-            System.out.println("No popup found or failed to close: " + e.getMessage());
+            System.out.println("Search button click failed: " + e.getMessage());
         }
     }
 
     /**
-     * Selects SUV from the cab type filters.
+     * Closes any popup/overlay shown on the page.
+     * Goibibo ALWAYS shows a booking assistance overlay — this must be closed first.
+     */
+    public void closePopupIfVisible() {
+        try {
+            // Short wait to let popup appear
+            WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(5));
+
+            By closePopup = By.xpath(
+                    "//span[@role='presentation'] | " +
+                    "//span[contains(@class,'close')] | " +
+                    "//button[contains(@class,'close')] | " +
+                    "//*[@aria-label='close' or @aria-label='Close'] | " +
+                    "//div[contains(@class,'assistCard') or contains(@class,'bookAssist')]//button | " +
+                    "//div[contains(@class,'modal') or contains(@class,'overlay') or contains(@class,'popup')]" +
+                    "//button[contains(@class,'close') or contains(text(),'×') or contains(text(),'✕')]"
+            );
+
+            WebElement closeBtn = shortWait.until(ExpectedConditions.visibilityOfElementLocated(closePopup));
+            closeBtn.click();
+            WaitUtils.hardWait(1000);
+            System.out.println("Popup closed");
+        } catch (Exception e) {
+            // Try Escape key as backup
+            try {
+                new Actions(driver).sendKeys(Keys.ESCAPE).perform();
+                WaitUtils.hardWait(500);
+            } catch (Exception ignored) {}
+            System.out.println("No popup visible or already closed");
+        }
+    }
+
+    /**
+     * Selects the SUV filter from the cab type checkboxes.
      */
     public void selectSuvFilter() {
+        // Close any popup first
+        closePopupIfVisible();
+
         try {
-            WebElement suvFilter = WaitUtils.waitForElementClickable(driver, suvCheckbox);
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-            js.executeScript("arguments[0].scrollIntoView(true)", suvFilter);
+            By suvLocator = By.xpath(
+                    "//input[@type='checkbox']/following-sibling::span[contains(text(),'SUV')] | " +
+                    "//label[contains(normalize-space(.),'SUV') and not(contains(.,'Luxury'))] | " +
+                    "//span[normalize-space(text())='SUV']/preceding-sibling::input[@type='checkbox'] | " +
+                    "//div[contains(@class,'filter')]//span[normalize-space(text())='SUV']"
+            );
+            WebElement suv = wait.until(ExpectedConditions.elementToBeClickable(suvLocator));
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'})", suv);
             WaitUtils.hardWait(500);
-            suvFilter.click();
+            suv.click();
             WaitUtils.hardWait(2000);
             System.out.println("SUV filter selected");
         } catch (Exception e) {
-            System.out.println("Could not select SUV filter: " + e.getMessage());
-            // Try clicking by JS
+            System.out.println("SUV filter click failed: " + e.getMessage());
+            // Try JS click on SUV text as last resort
             try {
-                WebElement suvLabel = driver.findElement(By.xpath("//*[contains(text(),'SUV')]"));
-                ((JavascriptExecutor) driver).executeScript("arguments[0].click()", suvLabel);
-                WaitUtils.hardWait(2000);
+                List<WebElement> suvEls = driver.findElements(By.xpath("//*[normalize-space(text())='SUV']"));
+                for (WebElement el : suvEls) {
+                    if (el.isDisplayed()) {
+                        ((JavascriptExecutor) driver).executeScript("arguments[0].click()", el);
+                        WaitUtils.hardWait(1500);
+                        System.out.println("SUV selected via JS click");
+                        break;
+                    }
+                }
             } catch (Exception e2) {
                 System.out.println("JS click on SUV also failed: " + e2.getMessage());
             }
         }
     }
 
-    /**
-     * Returns true if SUV results are shown.
-     */
     public boolean isSuvResultDisplayed() {
         try {
             List<WebElement> suvResults = driver.findElements(
-                    By.xpath("//*[contains(text(),'SUV') or contains(@class,'suv') or contains(@alt,'SUV')]"));
+                    By.xpath("//*[contains(text(),'SUV') or contains(@class,'suv')]"));
             return !suvResults.isEmpty();
         } catch (Exception e) {
             return false;

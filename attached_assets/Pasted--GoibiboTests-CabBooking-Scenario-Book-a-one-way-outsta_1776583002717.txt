@@ -1,0 +1,222 @@
+@GoibiboTests @CabBooking
+Scenario: Book a one way outstation cab from Delhi Cantt to Manali and select SUV # src/test/resources/features/GoibiboTest.feature:8
+Apr 19, 2026 12:38:59 PM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch
+WARNING: Unable to find CDP implementation matching 147
+Apr 19, 2026 12:38:59 PM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5
+WARNING: Unable to find version of CDP to use for 147.0.7727.56. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.18.1` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's.
+  Given I open the Goibibo website                                                # com.goibibo.stepDefs.GoibiboStepDefs.i_open_the_goibibo_website()
+Screenshot saved: test-output/screenshots/step_20260419_124142.png
+  When I navigate to the Cabs section                                             # com.goibibo.stepDefs.GoibiboStepDefs.i_navigate_to_the_cabs_section()
+Screenshot saved: test-output/screenshots/step_20260419_124147.png
+Outstation One-way may already be selected: Expected condition failed: waiting for element to be clickable: By.xpath: //label[contains(text(),'Outstation') and contains(text(),'One-way')] | //span[contains(text(),'Outstation') and contains(text(),'One-way')] | //div[contains(text(),'Outstation One-way')] (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.4', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.56, chrome: {chromedriverVersion: 147.0.7727.57 (b4f28b5637d0..., userDataDir: /var/folders/zz/kjx9x1cx2_x...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55249}, goog:processID: 35216, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:55249/devtoo..., se:cdpVersion: 147.0.7727.56, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 6288edbaabf624c52a43988df7b186c1
+  And I select "Outstation One-way" trip type                                     # com.goibibo.stepDefs.GoibiboStepDefs.i_select_trip_type(java.lang.String)
+Screenshot saved: test-output/screenshots/step_20260419_124208.png
+  And I enter "Delhi Cantt" in the From location                                  # com.goibibo.stepDefs.GoibiboStepDefs.i_enter_in_the_from_location(java.lang.String)
+      org.openqa.selenium.StaleElementReferenceException: stale element reference: stale element not found in the current frame
+  (Session info: chrome=147.0.7727.56)
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.4', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [6288edbaabf624c52a43988df7b186c1, clearElement {id=f.6C407EE4960C864BDF8DC41353965458.d.96003533147767CAD1C9024BDBD2DB0D.e.9197}]
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.56, chrome: {chromedriverVersion: 147.0.7727.57 (b4f28b5637d0..., userDataDir: /var/folders/zz/kjx9x1cx2_x...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55249}, goog:processID: 35216, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:55249/devtoo..., se:cdpVersion: 147.0.7727.56, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[ChromeDriver: chrome on mac (6288edbaabf624c52a43988df7b186c1)] -> xpath: //div[contains(text(),'From')]/following-sibling::div//input | //input[@placeholder[contains(.,'From') or contains(.,'from')]] | //label[contains(text(),'From')]/following-sibling::input | //div[@class[contains(.,'source')]]//input]
+Session ID: 6288edbaabf624c52a43988df7b186c1
+        at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+        at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:502)
+        at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:486)
+        at org.openqa.selenium.remote.ErrorCodec.decode(ErrorCodec.java:167)
+        at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:138)
+        at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:50)
+        at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:190)
+        at org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:216)
+        at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:174)
+        at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:519)
+        at org.openqa.selenium.remote.RemoteWebElement.execute(RemoteWebElement.java:223)
+        at org.openqa.selenium.remote.RemoteWebElement.clear(RemoteWebElement.java:129)
+        at com.goibibo.pages.CabsPage.enterFromLocation(CabsPage.java:66)
+        at com.goibibo.stepDefs.GoibiboStepDefs.i_enter_in_the_from_location(GoibiboStepDefs.java:66)
+        at ✽.I enter "Delhi Cantt" in the From location(file:///Users/shoebiqbal/Desktop/cucumberBDD/travelingSite-AutomationTesting/goibibo-automation/src/test/resources/features/GoibiboTest.feature:11)
+
+Screenshot saved: test-output/screenshots/step_20260419_124209.png
+  And I select "Delhi Cantt Railway Junction" from the suggestions                # com.goibibo.stepDefs.GoibiboStepDefs.i_select_from_the_suggestions(java.lang.String)
+  And I enter "Manali" in the To location                                         # com.goibibo.stepDefs.GoibiboStepDefs.i_enter_in_the_to_location(java.lang.String)
+  And I select "Manali, Himachal Pradesh" from the suggestions                    # com.goibibo.stepDefs.GoibiboStepDefs.i_select_from_the_suggestions(java.lang.String)
+  And I set pickup date to "10/06/2026"                                           # com.goibibo.stepDefs.GoibiboStepDefs.i_set_pickup_date_to(java.lang.String)
+  And I set pickup time to "10:30 AM"                                             # com.goibibo.stepDefs.GoibiboStepDefs.i_set_pickup_time_to(java.lang.String)
+  And I click the Search button for cabs                                          # com.goibibo.stepDefs.GoibiboStepDefs.i_click_the_search_button_for_cabs()
+  And I close any popups on the cab listing page                                  # com.goibibo.stepDefs.GoibiboStepDefs.i_close_any_popups_on_the_cab_listing_page()
+  And I select the SUV cab type from filters                                      # com.goibibo.stepDefs.GoibiboStepDefs.i_select_the_suv_cab_type_from_filters()
+  Then the cab results should be displayed with SUV type                          # com.goibibo.stepDefs.GoibiboStepDefs.the_cab_results_should_be_displayed_with_suv_type()
+Screenshot saved: test-output/screenshots/Book_a_one_way_outstation_cab_from_Delhi_Cantt_to_Manali_and_select_SUV_end_20260419_124209.png
+
+@GoibiboTests @HotelBooking
+Scenario: Search for hotels in Manali Mall Road with 4 adults # src/test/resources/features/GoibiboTest.feature:23
+Apr 19, 2026 12:42:10 PM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch
+WARNING: Unable to find CDP implementation matching 147
+Apr 19, 2026 12:42:10 PM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5
+WARNING: Unable to find version of CDP to use for 147.0.7727.56. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.18.1` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's.
+  Given I open the Goibibo website                            # com.goibibo.stepDefs.GoibiboStepDefs.i_open_the_goibibo_website()
+Screenshot saved: test-output/screenshots/step_20260419_124214.png
+  When I navigate to the Hotels section                       # com.goibibo.stepDefs.GoibiboStepDefs.i_navigate_to_the_hotels_section()
+Screenshot saved: test-output/screenshots/step_20260419_124217.png
+  And I enter "Manali Mall Road" in hotel search              # com.goibibo.stepDefs.GoibiboStepDefs.i_enter_in_hotel_search(java.lang.String)
+      org.openqa.selenium.TimeoutException: Expected condition failed: waiting for element to be clickable: By.xpath: //input[@placeholder[contains(.,'city') or contains(.,'hotel') or contains(.,'destination') or contains(.,'City')]] | //div[@class[contains(.,'search') or contains(.,'hotel')]]//input (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.4', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.56, chrome: {chromedriverVersion: 147.0.7727.57 (b4f28b5637d0..., userDataDir: /var/folders/zz/kjx9x1cx2_x...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55359}, goog:processID: 35392, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:55359/devtoo..., se:cdpVersion: 147.0.7727.56, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 4aae4e6509875179c8fae08478bf9de5
+        at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+        at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+        at com.goibibo.utils.WaitUtils.waitForElementClickable(WaitUtils.java:26)
+        at com.goibibo.pages.HotelsPage.enterHotelLocation(HotelsPage.java:46)
+        at com.goibibo.stepDefs.GoibiboStepDefs.i_enter_in_hotel_search(GoibiboStepDefs.java:132)
+        at ✽.I enter "Manali Mall Road" in hotel search(file:///Users/shoebiqbal/Desktop/cucumberBDD/travelingSite-AutomationTesting/goibibo-automation/src/test/resources/features/GoibiboTest.feature:25)
+
+Screenshot saved: test-output/screenshots/step_20260419_124237.png
+  And I select "Mall Road, Manali" from hotel suggestions     # com.goibibo.stepDefs.GoibiboStepDefs.i_select_from_hotel_suggestions(java.lang.String)
+  And I set hotel check-in date to "11/06/2026"               # com.goibibo.stepDefs.GoibiboStepDefs.i_set_hotel_check_in_date_to(java.lang.String)
+  And I set hotel check-out date to "15/06/2026"              # com.goibibo.stepDefs.GoibiboStepDefs.i_set_hotel_check_out_date_to(java.lang.String)
+  And I set number of adults to 4                             # com.goibibo.stepDefs.GoibiboStepDefs.i_set_number_of_adults_to(int)
+  And I click Search for hotels                               # com.goibibo.stepDefs.GoibiboStepDefs.i_click_search_for_hotels()
+  Then the hotel results page should be displayed             # com.goibibo.stepDefs.GoibiboStepDefs.the_hotel_results_page_should_be_displayed()
+Screenshot saved: test-output/screenshots/Search_for_hotels_in_Manali_Mall_Road_with_4_adults_end_20260419_124237.png
+
+@GoibiboTests @GiftCard
+Scenario: Navigate to Gift Cards from the login menu  # src/test/resources/features/GoibiboTest.feature:34
+Apr 19, 2026 12:42:47 PM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch
+WARNING: Unable to find CDP implementation matching 147
+Apr 19, 2026 12:42:47 PM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5
+WARNING: Unable to find version of CDP to use for 147.0.7727.56. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.18.1` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's.
+  Given I open the Goibibo website                    # com.goibibo.stepDefs.GoibiboStepDefs.i_open_the_goibibo_website()
+Screenshot saved: test-output/screenshots/step_20260419_124250.png
+  When I click on the Login Signup button             # com.goibibo.stepDefs.GoibiboStepDefs.i_click_on_the_login_signup_button()
+      org.openqa.selenium.TimeoutException: Expected condition failed: waiting for element to be clickable: By.xpath: //*[contains(text(),'Login') and (contains(text(),'Signup') or contains(text(),'Sign'))] | //span[normalize-space()='Login / Signup'] | //div[@class[contains(.,'signIn')]] | //div[contains(@class,'headerUser')] (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.4', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.56, chrome: {chromedriverVersion: 147.0.7727.57 (b4f28b5637d0..., userDataDir: /var/folders/zz/kjx9x1cx2_x...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55384}, goog:processID: 35491, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:55384/devtoo..., se:cdpVersion: 147.0.7727.56, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: ff0423414783e97b6dfc3a7f39dcf624
+        at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+        at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+        at com.goibibo.utils.WaitUtils.waitForElementClickable(WaitUtils.java:26)
+        at com.goibibo.pages.HomePage.clickLoginSignup(HomePage.java:55)
+        at com.goibibo.stepDefs.GoibiboStepDefs.i_click_on_the_login_signup_button(GoibiboStepDefs.java:178)
+        at ✽.I click on the Login Signup button(file:///Users/shoebiqbal/Desktop/cucumberBDD/travelingSite-AutomationTesting/goibibo-automation/src/test/resources/features/GoibiboTest.feature:35)
+
+Screenshot saved: test-output/screenshots/step_20260419_124311.png
+  Then I should see the Gift Cards option in the menu # com.goibibo.stepDefs.GoibiboStepDefs.i_should_see_the_gift_cards_option_in_the_menu()
+  And I click on Gift Cards                           # com.goibibo.stepDefs.GoibiboStepDefs.i_click_on_gift_cards()
+  Then the Gift Cards page should be displayed        # com.goibibo.stepDefs.GoibiboStepDefs.the_gift_cards_page_should_be_displayed()
+Screenshot saved: test-output/screenshots/Navigate_to_Gift_Cards_from_the_login_menu_end_20260419_124311.png
+[ERROR] Tests run: 3, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 270.0 s <<< FAILURE! -- in TestSuite
+[ERROR] com.goibibo.runner.TestRunner.runScenario["Book a one way outstation cab from Delhi Cantt to Manali and select SUV", "Goibibo Automation - Cab, Hotel and Gift Card booking flow"](1) -- Time elapsed: 192.9 s <<< FAILURE!
+org.openqa.selenium.StaleElementReferenceException: 
+stale element reference: stale element not found in the current frame
+  (Session info: chrome=147.0.7727.56)
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.4', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [6288edbaabf624c52a43988df7b186c1, clearElement {id=f.6C407EE4960C864BDF8DC41353965458.d.96003533147767CAD1C9024BDBD2DB0D.e.9197}]
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.56, chrome: {chromedriverVersion: 147.0.7727.57 (b4f28b5637d0..., userDataDir: /var/folders/zz/kjx9x1cx2_x...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55249}, goog:processID: 35216, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:55249/devtoo..., se:cdpVersion: 147.0.7727.56, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[ChromeDriver: chrome on mac (6288edbaabf624c52a43988df7b186c1)] -> xpath: //div[contains(text(),'From')]/following-sibling::div//input | //input[@placeholder[contains(.,'From') or contains(.,'from')]] | //label[contains(text(),'From')]/following-sibling::input | //div[@class[contains(.,'source')]]//input]
+Session ID: 6288edbaabf624c52a43988df7b186c1
+        at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+        at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:502)
+        at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:486)
+        at org.openqa.selenium.remote.ErrorCodec.decode(ErrorCodec.java:167)
+        at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:138)
+        at org.openqa.selenium.remote.codec.w3c.W3CHttpResponseCodec.decode(W3CHttpResponseCodec.java:50)
+        at org.openqa.selenium.remote.HttpCommandExecutor.execute(HttpCommandExecutor.java:190)
+        at org.openqa.selenium.remote.service.DriverCommandExecutor.invokeExecute(DriverCommandExecutor.java:216)
+        at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverCommandExecutor.java:174)
+        at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:519)
+        at org.openqa.selenium.remote.RemoteWebElement.execute(RemoteWebElement.java:223)
+        at org.openqa.selenium.remote.RemoteWebElement.clear(RemoteWebElement.java:129)
+        at com.goibibo.pages.CabsPage.enterFromLocation(CabsPage.java:66)
+        at com.goibibo.stepDefs.GoibiboStepDefs.i_enter_in_the_from_location(GoibiboStepDefs.java:66)
+        at ✽.I enter "Delhi Cantt" in the From location(file:///Users/shoebiqbal/Desktop/cucumberBDD/travelingSite-AutomationTesting/goibibo-automation/src/test/resources/features/GoibiboTest.feature:11)
+
+[ERROR] com.goibibo.runner.TestRunner.runScenario["Search for hotels in Manali Mall Road with 4 adults", "Goibibo Automation - Cab, Hotel and Gift Card booking flow"](2) -- Time elapsed: 36.96 s <<< FAILURE!
+org.openqa.selenium.TimeoutException: 
+Expected condition failed: waiting for element to be clickable: By.xpath: //input[@placeholder[contains(.,'city') or contains(.,'hotel') or contains(.,'destination') or contains(.,'City')]] | //div[@class[contains(.,'search') or contains(.,'hotel')]]//input (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.4', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.56, chrome: {chromedriverVersion: 147.0.7727.57 (b4f28b5637d0..., userDataDir: /var/folders/zz/kjx9x1cx2_x...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55359}, goog:processID: 35392, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:55359/devtoo..., se:cdpVersion: 147.0.7727.56, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 4aae4e6509875179c8fae08478bf9de5
+        at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+        at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+        at com.goibibo.utils.WaitUtils.waitForElementClickable(WaitUtils.java:26)
+        at com.goibibo.pages.HotelsPage.enterHotelLocation(HotelsPage.java:46)
+        at com.goibibo.stepDefs.GoibiboStepDefs.i_enter_in_hotel_search(GoibiboStepDefs.java:132)
+        at ✽.I enter "Manali Mall Road" in hotel search(file:///Users/shoebiqbal/Desktop/cucumberBDD/travelingSite-AutomationTesting/goibibo-automation/src/test/resources/features/GoibiboTest.feature:25)
+
+[ERROR] com.goibibo.runner.TestRunner.runScenario["Navigate to Gift Cards from the login menu", "Goibibo Automation - Cab, Hotel and Gift Card booking flow"](3) -- Time elapsed: 34.55 s <<< FAILURE!
+org.openqa.selenium.TimeoutException: 
+Expected condition failed: waiting for element to be clickable: By.xpath: //*[contains(text(),'Login') and (contains(text(),'Signup') or contains(text(),'Sign'))] | //span[normalize-space()='Login / Signup'] | //div[@class[contains(.,'signIn')]] | //div[contains(@class,'headerUser')] (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.4', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.56, chrome: {chromedriverVersion: 147.0.7727.57 (b4f28b5637d0..., userDataDir: /var/folders/zz/kjx9x1cx2_x...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55384}, goog:processID: 35491, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:55384/devtoo..., se:cdpVersion: 147.0.7727.56, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: ff0423414783e97b6dfc3a7f39dcf624
+        at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+        at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+        at com.goibibo.utils.WaitUtils.waitForElementClickable(WaitUtils.java:26)
+        at com.goibibo.pages.HomePage.clickLoginSignup(HomePage.java:55)
+        at com.goibibo.stepDefs.GoibiboStepDefs.i_click_on_the_login_signup_button(GoibiboStepDefs.java:178)
+        at ✽.I click on the Login Signup button(file:///Users/shoebiqbal/Desktop/cucumberBDD/travelingSite-AutomationTesting/goibibo-automation/src/test/resources/features/GoibiboTest.feature:35)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   TestRunner.runScenario » StaleElementReference stale element reference: stale element not found in the current frame
+  (Session info: chrome=147.0.7727.56)
+For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.4', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Command: [6288edbaabf624c52a43988df7b186c1, clearElement {id=f.6C407EE4960C864BDF8DC41353965458.d.96003533147767CAD1C9024BDBD2DB0D.e.9197}]
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.56, chrome: {chromedriverVersion: 147.0.7727.57 (b4f28b5637d0..., userDataDir: /var/folders/zz/kjx9x1cx2_x...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55249}, goog:processID: 35216, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:55249/devtoo..., se:cdpVersion: 147.0.7727.56, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[ChromeDriver: chrome on mac (6288edbaabf624c52a43988df7b186c1)] -> xpath: //div[contains(text(),'From')]/following-sibling::div//input | //input[@placeholder[contains(.,'From') or contains(.,'from')]] | //label[contains(text(),'From')]/following-sibling::input | //div[@class[contains(.,'source')]]//input]
+Session ID: 6288edbaabf624c52a43988df7b186c1
+[ERROR]   TestRunner.runScenario » Timeout Expected condition failed: waiting for element to be clickable: By.xpath: //*[contains(text(),'Login') and (contains(text(),'Signup') or contains(text(),'Sign'))] | //span[normalize-space()='Login / Signup'] | //div[@class[contains(.,'signIn')]] | //div[contains(@class,'headerUser')] (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.4', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.56, chrome: {chromedriverVersion: 147.0.7727.57 (b4f28b5637d0..., userDataDir: /var/folders/zz/kjx9x1cx2_x...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55384}, goog:processID: 35491, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:55384/devtoo..., se:cdpVersion: 147.0.7727.56, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: ff0423414783e97b6dfc3a7f39dcf624
+[ERROR]   TestRunner.runScenario » Timeout Expected condition failed: waiting for element to be clickable: By.xpath: //input[@placeholder[contains(.,'city') or contains(.,'hotel') or contains(.,'destination') or contains(.,'City')]] | //div[@class[contains(.,'search') or contains(.,'hotel')]]//input (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.4', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.56, chrome: {chromedriverVersion: 147.0.7727.57 (b4f28b5637d0..., userDataDir: /var/folders/zz/kjx9x1cx2_x...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55359}, goog:processID: 35392, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:55359/devtoo..., se:cdpVersion: 147.0.7727.56, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 4aae4e6509875179c8fae08478bf9de5
+[INFO] 
+[ERROR] Tests run: 3, Failures: 3, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  04:45 min
+[INFO] Finished at: 2026-04-19T12:43:26+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.2.5:test (default-test) on project goibibo-automation: There are test failures.
+[ERROR] 
+[ERROR] Please refer to /Users/shoebiqbal/Desktop/cucumberBDD/travelingSite-AutomationTesting/goibibo-automation/target/surefire-reports for the individual test results.
+[ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

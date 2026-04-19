@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "https://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="https://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>TestNG Report</title>
+<style type="text/css">table {margin-bottom:10px;border-collapse:collapse;empty-cells:show}th,td {border:1px solid #009;padding:.25em .5em}th {vertical-align:bottom}td {vertical-align:top}table a {font-weight:bold}.stripe td {background-color: #E6EBF9}.num {text-align:right}.passedodd td {background-color: #3F3}.passedeven td {background-color: #0A0}.skippedodd td {background-color: #DDD}.skippedeven td {background-color: #CCC}.failedodd td,.attn {background-color: #F33}.failedeven td,.stripe .attn {background-color: #D00}.stacktrace {white-space:pre;font-family:monospace}.totop {font-size:85%;text-align:center;border-bottom:2px solid #000}.invisible {display:none}</style>
+</head>
+<body>
+<table>
+<tr><th>Test</th><th># Passed</th><th># Skipped</th><th># Retried</th><th># Failed</th><th>Time (ms)</th><th>Included Groups</th><th>Excluded Groups</th></tr>
+<tr><th colspan="8">Goibibo Automation Suite</th></tr>
+<tr><td><a href="#t0">Goibibo Full Automation Test</a></td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num attn">2</td><td class="num">152,517</td><td></td><td></td></tr>
+</table>
+<table id='summary'><thead><tr><th>Class</th><th>Method</th><th>Start</th><th>Time (ms)</th></tr></thead><tbody><tr><th colspan="4">Goibibo Automation Suite</th></tr></tbody><tbody id="t0"><tr><th colspan="4">Goibibo Full Automation Test &#8212; failed</th></tr><tr class="failedeven"><td rowspan="2">com.goibibo.runner.TestRunner</td><td><a href="#m0">runScenario</a></td><td rowspan="2">1776586652126</td><td rowspan="2">34481</td></tr><tr class="failedeven"><td><a href="#m1">runScenario</a></td></tr><tr><th colspan="4">Goibibo Full Automation Test &#8212; passed</th></tr><tr class="passedeven"><td rowspan="1">com.goibibo.runner.TestRunner</td><td><a href="#m2">runScenario</a></td><td rowspan="1">1776586534489</td><td rowspan="1">81502</td></tr></tbody>
+</table>
+<h2>Goibibo Full Automation Test</h2><h3 id="m0">com.goibibo.runner.TestRunner#runScenario</h3><table class="result"><tr class="param"><th>Parameter #1</th><th>Parameter #2</th></tr><tr class="param stripe"><td>&quot;Navigate to Gift Cards from the login menu&quot;</td><td>&quot;Goibibo Automation - Cab, Hotel and Gift Card booking flow&quot;</td></tr><tr><th colspan="2">Exception</th></tr><tr><td colspan="2"><div class="stacktrace">org.openqa.selenium.TimeoutException: Expected condition failed: waiting for element to be clickable: By.xpath: //span[contains(text(),&apos;Login&apos;)] (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: &apos;4.18.1&apos;, revision: &apos;b1d3319b48&apos;
+System info: os.name: &apos;Mac OS X&apos;, os.arch: &apos;aarch64&apos;, os.version: &apos;26.4&apos;, java.version: &apos;21.0.9&apos;
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.56, chrome: {chromedriverVersion: 147.0.7727.57 (b4f28b5637d0..., userDataDir: /var/folders/zz/kjx9x1cx2_x...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55777}, goog:processID: 38285, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:55777/devtoo..., se:cdpVersion: 147.0.7727.56, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: cedc841d4595f9ec3d952e473eee3ff5
+	at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.goibibo.utils.WaitUtils.waitForElementClickable(WaitUtils.java:26)
+	at com.goibibo.pages.HomePage.clickLoginSignup(HomePage.java:49)
+	at com.goibibo.stepDefs.GoibiboStepDefs.i_click_on_the_login_signup_button(GoibiboStepDefs.java:178)
+	at ✽.I click on the Login Signup button(file:///Users/shoebiqbal/Desktop/cucumberBDD/travelingSite-AutomationTesting/goibibo-automation/src/test/resources/features/GoibiboTest.feature:35)
+</div></td></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m1">com.goibibo.runner.TestRunner#runScenario</h3><table class="result"><tr class="param"><th>Parameter #1</th><th>Parameter #2</th></tr><tr class="param stripe"><td>&quot;Search for hotels in Manali Mall Road with 4 adults&quot;</td><td>&quot;Goibibo Automation - Cab, Hotel and Gift Card booking flow&quot;</td></tr><tr><th colspan="2">Exception</th></tr><tr><td colspan="2"><div class="stacktrace">org.openqa.selenium.TimeoutException: Expected condition failed: waiting for element to be clickable: By.xpath: //input[@placeholder[contains(.,&apos;City&apos;) or contains(.,&apos;area&apos;) or contains(.,&apos;property&apos;) or contains(.,&apos;destination&apos;)]] | //input[@type=&apos;text&apos; and contains(@class,&apos;search&apos;)] | (//input[@type=&apos;text&apos;])[1] (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: &apos;4.18.1&apos;, revision: &apos;b1d3319b48&apos;
+System info: os.name: &apos;Mac OS X&apos;, os.arch: &apos;aarch64&apos;, os.version: &apos;26.4&apos;, java.version: &apos;21.0.9&apos;
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.56, chrome: {chromedriverVersion: 147.0.7727.57 (b4f28b5637d0..., userDataDir: /var/folders/zz/kjx9x1cx2_x...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55748}, goog:processID: 38182, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:55748/devtoo..., se:cdpVersion: 147.0.7727.56, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: f8257440769c4e9f35606a0a62fdc94b
+	at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.goibibo.pages.HotelsPage.enterHotelLocation(HotelsPage.java:53)
+	at com.goibibo.stepDefs.GoibiboStepDefs.i_enter_in_hotel_search(GoibiboStepDefs.java:132)
+	at ✽.I enter &quot;Manali Mall Road&quot; in hotel search(file:///Users/shoebiqbal/Desktop/cucumberBDD/travelingSite-AutomationTesting/goibibo-automation/src/test/resources/features/GoibiboTest.feature:25)
+</div></td></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+<h3 id="m2">com.goibibo.runner.TestRunner#runScenario</h3><table class="result"><tr class="param"><th>Parameter #1</th><th>Parameter #2</th></tr><tr class="param stripe"><td>&quot;Book a one way outstation cab from Delhi Cantt to Manali and select SUV&quot;</td><td>&quot;Goibibo Automation - Cab, Hotel and Gift Card booking flow&quot;</td></tr></table><p class="totop"><a href="#summary">back to summary</a></p>
+</body>
+</html>

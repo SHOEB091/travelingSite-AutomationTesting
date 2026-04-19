@@ -1,0 +1,33 @@
+-------------------------------------------------------------------------------
+Test set: TestSuite
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 157.8 s <<< FAILURE! -- in TestSuite
+com.goibibo.runner.TestRunner.runScenario["Search for hotels in Manali Mall Road with 4 adults", "Goibibo Automation - Cab, Hotel and Gift Card booking flow"](2) -- Time elapsed: 36.11 s <<< FAILURE!
+org.openqa.selenium.TimeoutException: 
+Expected condition failed: waiting for element to be clickable: By.xpath: //input[@placeholder[contains(.,'City') or contains(.,'area') or contains(.,'property') or contains(.,'destination')]] | //input[@type='text' and contains(@class,'search')] | (//input[@type='text'])[1] (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.4', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.56, chrome: {chromedriverVersion: 147.0.7727.57 (b4f28b5637d0..., userDataDir: /var/folders/zz/kjx9x1cx2_x...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55748}, goog:processID: 38182, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:55748/devtoo..., se:cdpVersion: 147.0.7727.56, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: f8257440769c4e9f35606a0a62fdc94b
+	at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.goibibo.pages.HotelsPage.enterHotelLocation(HotelsPage.java:53)
+	at com.goibibo.stepDefs.GoibiboStepDefs.i_enter_in_hotel_search(GoibiboStepDefs.java:132)
+	at ✽.I enter "Manali Mall Road" in hotel search(file:///Users/shoebiqbal/Desktop/cucumberBDD/travelingSite-AutomationTesting/goibibo-automation/src/test/resources/features/GoibiboTest.feature:25)
+
+com.goibibo.runner.TestRunner.runScenario["Navigate to Gift Cards from the login menu", "Goibibo Automation - Cab, Hotel and Gift Card booking flow"](3) -- Time elapsed: 34.48 s <<< FAILURE!
+org.openqa.selenium.TimeoutException: 
+Expected condition failed: waiting for element to be clickable: By.xpath: //span[contains(text(),'Login')] (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.4', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.56, chrome: {chromedriverVersion: 147.0.7727.57 (b4f28b5637d0..., userDataDir: /var/folders/zz/kjx9x1cx2_x...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55777}, goog:processID: 38285, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:55777/devtoo..., se:cdpVersion: 147.0.7727.56, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: cedc841d4595f9ec3d952e473eee3ff5
+	at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.goibibo.utils.WaitUtils.waitForElementClickable(WaitUtils.java:26)
+	at com.goibibo.pages.HomePage.clickLoginSignup(HomePage.java:49)
+	at com.goibibo.stepDefs.GoibiboStepDefs.i_click_on_the_login_signup_button(GoibiboStepDefs.java:178)
+	at ✽.I click on the Login Signup button(file:///Users/shoebiqbal/Desktop/cucumberBDD/travelingSite-AutomationTesting/goibibo-automation/src/test/resources/features/GoibiboTest.feature:35)
+

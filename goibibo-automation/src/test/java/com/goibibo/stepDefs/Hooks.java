@@ -15,14 +15,18 @@ import org.openqa.selenium.WebDriver;
 /**
  * Hooks - Cucumber lifecycle hooks.
  *
- * Browser is kept open across all scenarios.
- * After each scenario we just navigate back to the home page.
- * The browser quits automatically via the JVM shutdown hook in DriverManager.
+ * Each scenario gets a FRESH browser:
+ *   @Before  -> opens a new Chrome window
+ *   @After   -> takes final screenshot, logs pass/fail, then CLOSES browser
+ *
+ * This prevents Goibibo's anti-bot detection from blocking hotel/gift card tests
+ * that would otherwise fail with "200 - OK" blank pages.
  */
 public class Hooks {
 
     @Before
     public void setUp(Scenario scenario) {
+        // Opens a new browser (driver == null since previous scenario closed it)
         DriverManager.getDriver();
 
         ExtentTest test = ExtentReportManager.getExtentReports()
@@ -37,6 +41,7 @@ public class Hooks {
         WebDriver driver = DriverManager.getDriver();
         ExtentTest test = ExtentReportManager.getTest();
 
+        // Take final screenshot
         try {
             String screenshotPath = ScreenshotUtils.takeScreenshot(driver, scenario.getName() + "_end");
 
@@ -55,14 +60,15 @@ public class Hooks {
 
         ExtentReportManager.flushReports();
 
-        // Navigate back to home page for the next scenario (browser stays open)
-        DriverManager.goHome();
+        // Close browser — next scenario will open a fresh one
+        DriverManager.quitDriver();
     }
 
     @AfterStep
     public void afterEachStep(Scenario scenario) {
         try {
             WebDriver driver = DriverManager.getDriver();
+            if (driver == null) return;
             String screenshotPath = ScreenshotUtils.takeScreenshot(driver, "step");
             ExtentTest test = ExtentReportManager.getTest();
             if (test != null) {
@@ -70,7 +76,7 @@ public class Hooks {
                         MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
             }
         } catch (Exception e) {
-            // Silently skip
+            // Silently skip if driver not available
         }
     }
 }

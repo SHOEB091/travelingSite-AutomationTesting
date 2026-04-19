@@ -2,6 +2,7 @@ package com.goibibo.pages;
 
 import com.goibibo.utils.WaitUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -12,18 +13,16 @@ import java.util.List;
 
 /**
  * GiftCardPage - Page Object for Goibibo Gift Cards.
- * Navigates via Login/Signup dropdown that shows Gift Cards option.
+ *
+ * After clicking the Login/Signup header button, a dropdown appears with:
+ *   goTribe | Offers | Student Go Pass | My Trips | goCash | Gift Cards
+ *
+ * This class finds "Gift Cards" in that dropdown and clicks it.
  */
 public class GiftCardPage {
 
     private WebDriver driver;
     private WebDriverWait wait;
-
-    // Simple, reliable locator for Gift Cards text in the dropdown
-    private By giftCardLinkLocator = By.xpath(
-            "//a[contains(text(),'Gift Card') or contains(text(),'Gift Cards')] | " +
-            "//*[contains(text(),'Gift Cards')]"
-    );
 
     public GiftCardPage(WebDriver driver) {
         this.driver = driver;
@@ -31,19 +30,31 @@ public class GiftCardPage {
     }
 
     /**
-     * Checks if the Gift Cards option is visible in the dropdown.
+     * Checks if the "Gift Cards" option is visible in the login dropdown.
+     * Waits up to 5 seconds for it to appear after the dropdown opens.
      */
     public boolean isGiftCardOptionVisible() {
         try {
-            WaitUtils.hardWait(1000);
-            List<WebElement> elements = driver.findElements(giftCardLinkLocator);
+            WaitUtils.hardWait(1500);
+
+            // Try to wait for Gift Cards text to appear in the page
+            By giftCardLocator = By.xpath(
+                "//a[contains(normalize-space(.),'Gift Card')] | " +
+                "//span[contains(normalize-space(.),'Gift Card')] | " +
+                "//div[contains(normalize-space(.),'Gift Card')][not(contains(@class,'content'))]"
+            );
+
+            new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOfElementLocated(giftCardLocator));
+
+            List<WebElement> elements = driver.findElements(giftCardLocator);
             for (WebElement el : elements) {
                 if (el.isDisplayed()) {
-                    System.out.println("Gift Cards found in menu: " + el.getText());
+                    System.out.println("Gift Cards option found: " + el.getText());
                     return true;
                 }
             }
-            System.out.println("Gift Cards option not found in menu");
+            System.out.println("Gift Cards not visible in dropdown");
             return false;
         } catch (Exception e) {
             System.out.println("isGiftCardOptionVisible error: " + e.getMessage());
@@ -52,44 +63,74 @@ public class GiftCardPage {
     }
 
     /**
-     * Clicks the Gift Cards link.
+     * Clicks the Gift Cards link in the dropdown menu.
      */
     public void clickGiftCards() {
-        try {
-            List<WebElement> elements = driver.findElements(giftCardLinkLocator);
-            for (WebElement el : elements) {
-                if (el.isDisplayed()) {
-                    el.click();
-                    WaitUtils.hardWait(3000);
-                    System.out.println("Clicked Gift Cards");
-                    return;
+        By[] locators = {
+            By.xpath("//a[contains(normalize-space(.),'Gift Card')]"),
+            By.xpath("//span[contains(normalize-space(.),'Gift Card')]/ancestor::a[1]"),
+            By.xpath("//*[contains(normalize-space(.),'Gift Card')][not(contains(@class,'description') or contains(@class,'text'))]")
+        };
+
+        for (By locator : locators) {
+            try {
+                List<WebElement> elements = driver.findElements(locator);
+                for (WebElement el : elements) {
+                    if (el.isDisplayed()) {
+                        el.click();
+                        WaitUtils.hardWait(3000);
+                        System.out.println("Clicked Gift Cards. URL: " + driver.getCurrentUrl());
+                        return;
+                    }
                 }
+            } catch (Exception e) {
+                // try next locator
             }
-            System.out.println("No visible Gift Cards link to click");
+        }
+
+        // JS fallback — click the Gift Cards element
+        try {
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript(
+                "var els = document.querySelectorAll('a, button, span, div');" +
+                "for(var i=0; i<els.length; i++){" +
+                "  var t = els[i].innerText ? els[i].innerText.trim() : '';" +
+                "  if((t === 'Gift Cards' || t === 'Gift Card') && els[i].offsetWidth > 0){" +
+                "    els[i].click();" +
+                "    console.log('Gift Cards clicked via JS');" +
+                "    break;" +
+                "  }" +
+                "}"
+            );
+            WaitUtils.hardWait(3000);
         } catch (Exception e) {
-            System.out.println("clickGiftCards error: " + e.getMessage());
+            System.out.println("Gift Cards JS click failed: " + e.getMessage());
         }
     }
 
     /**
-     * Returns true if the Gift Cards page is loaded.
-     * Checks by URL or page heading.
+     * Returns true if the Gift Cards page is loaded (checks URL or page heading).
      */
     public boolean isGiftCardPageDisplayed() {
         WaitUtils.hardWait(2000);
         String url = driver.getCurrentUrl();
-        System.out.println("Gift card page check URL: " + url);
-        if (url.contains("gift") || url.contains("giftcard") || url.contains("gift-card")) {
+        System.out.println("Gift Card page URL: " + url);
+
+        if (url.contains("gift") || url.contains("giftcard")) {
             return true;
         }
-        // Also check by heading on page
+
+        // Check page heading
         try {
             List<WebElement> headings = driver.findElements(
-                    By.xpath("//*[contains(text(),'Gift Card') or contains(text(),'Gift cards')]"));
+                By.xpath("//h1[contains(text(),'Gift')] | //h2[contains(text(),'Gift')] | " +
+                         "//*[contains(@class,'title') and contains(text(),'Gift')]")
+            );
             for (WebElement h : headings) {
                 if (h.isDisplayed()) return true;
             }
         } catch (Exception ignore) {}
+
         return false;
     }
 }

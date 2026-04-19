@@ -1,0 +1,144 @@
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+
+@GoibiboTests @CabBooking
+Scenario: Book a one way outstation cab from Delhi Cantt to Manali and select SUV # src/test/resources/features/GoibiboTest.feature:8
+Apr 19, 2026 1:59:30 PM org.openqa.selenium.devtools.CdpVersionFinder findNearestMatch
+WARNING: Unable to find CDP implementation matching 147
+Apr 19, 2026 1:59:30 PM org.openqa.selenium.chromium.ChromiumDriver lambda$new$5
+WARNING: Unable to find version of CDP to use for 147.0.7727.56. You may need to include a dependency on a specific version of the CDP using something similar to `org.seleniumhq.selenium:selenium-devtools-v86:4.18.1` where the version ("v86") matches the version of the chromium-based browser you're using and the version number of the artifact is the same as Selenium's.
+  Given I open the Goibibo website                                                # com.goibibo.stepDefs.GoibiboStepDefs.i_open_the_goibibo_website()
+Screenshot saved: test-output/screenshots/step_20260419_135936.png
+No popup visible or already closed
+  When I navigate to the Cabs section                                             # com.goibibo.stepDefs.GoibiboStepDefs.i_navigate_to_the_cabs_section()
+Screenshot saved: test-output/screenshots/step_20260419_135946.png
+  And I select "Outstation One-way" trip type                                     # com.goibibo.stepDefs.GoibiboStepDefs.i_select_trip_type(java.lang.String)
+Screenshot saved: test-output/screenshots/step_20260419_135948.png
+  And I enter "Delhi Cantt" in the From location                                  # com.goibibo.stepDefs.GoibiboStepDefs.i_enter_in_the_from_location(java.lang.String)
+Screenshot saved: test-output/screenshots/step_20260419_135951.png
+Selected suggestion: Delhi Cantt Railway Junction
+  And I select "Delhi Cantt Railway Junction" from the suggestions                # com.goibibo.stepDefs.GoibiboStepDefs.i_select_from_the_suggestions(java.lang.String)
+Screenshot saved: test-output/screenshots/step_20260419_135953.png
+  And I enter "Manali" in the To location                                         # com.goibibo.stepDefs.GoibiboStepDefs.i_enter_in_the_to_location(java.lang.String)
+Screenshot saved: test-output/screenshots/step_20260419_135956.png
+Selected suggestion: Manali, Himachal Pradesh
+  And I select "Manali, Himachal Pradesh" from the suggestions                    # com.goibibo.stepDefs.GoibiboStepDefs.i_select_from_the_suggestions(java.lang.String)
+Screenshot saved: test-output/screenshots/step_20260419_135958.png
+Pickup date set to day: 10
+  And I set pickup date to "10/06/2026"                                           # com.goibibo.stepDefs.GoibiboStepDefs.i_set_pickup_date_to(java.lang.String)
+Screenshot saved: test-output/screenshots/step_20260419_140001.png
+Time setting issue (non-critical): Expected condition failed: waiting for element to be clickable: By.xpath: //*[normalize-space(text())='10:30 AM'] | //option[contains(text(),'10:30 AM')] (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.4', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.56, chrome: {chromedriverVersion: 147.0.7727.57 (b4f28b5637d0..., userDataDir: /var/folders/zz/kjx9x1cx2_x...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55880}, goog:processID: 39761, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:55880/devtoo..., se:cdpVersion: 147.0.7727.56, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: f94c154f47ed72b7467b63bd23d66ea6
+  And I set pickup time to "10:30 AM"                                             # com.goibibo.stepDefs.GoibiboStepDefs.i_set_pickup_time_to(java.lang.String)
+Screenshot saved: test-output/screenshots/step_20260419_140022.png
+Search clicked, current URL: https://www.goibibo.com/cabs/listing?fromCity=%7B%22latitude%22%3A28.6104248%2C%22longitude%22%3A77.1141536%2C%22pincode%22%3A%22110010%22%2C%22place_id%22%3A%22ChIJjed7SgAdDTkRxXcRr625DD8%22%2C%22city%22%3A%22NCR%22%2C%22google_city%22%3A%22Delhi%20Division%22%2C%22state%22%3A%22Delhi%22%2C%22country%22%3A%22India%22%2C%22country_code%22%3A%22IN%22%2C%22is_city%22%3Afalse%2C%22is_airport%22%3Afalse%2C%22google_address%22%3A%22Delhi%20Cantt%20Railway%20Junction%20Flyover%2C%20394%2C%20Jail%20Rd%2C%20Nangal%2C%20Kirby%20Place%2C%20Janakpuri%2C%20New%20Delhi%2C%20Delhi%20110010%2C%20India%22%2C%22address%22%3A%22Delhi%20Cantt%20Railway%20Junction%20Flyover%2C%20Jail%20Road%2C%20Nangal%2C%20Kirby%20Place%2C%20Janakpuri%2C%20New%20Delhi%2C%20Delhi%2C%20India%22%7D&toCity=%7B%22latitude%22%3A32.2431872%2C%22longitude%22%3A77.1891761%2C%22pincode%22%3Anull%2C%22place_id%22%3A%22ChIJP9A_FgiHBDkRzXZQvg6oKYE%22%2C%22city%22%3A%22manali%22%2C%22google_city%22%3A%22Mandi%20Division%22%2C%22state%22%3A%22Himachal%20Pradesh%22%2C%22country%22%3A%22India%22%2C%22country_code%22%3A%22IN%22%2C%22is_city%22%3Atrue%2C%22google_address%22%3A%22Manali%2C%20Himachal%20Pradesh%2C%20India%22%2C%22address%22%3A%22Manali%2C%20Himachal%20Pradesh%2C%20India%22%7D&tripType=OW&departDate=20-04-2026&pickupTime=10%3A00&intlFlow=false&returnDate=&dropTime=&from=%7B%22locusV2Id%22%3A%22CTDEL%22%2C%22locusV2Type%22%3A%22CITY%22%2C%22address%22%3A%22Delhi%20Cantt%20Railway%20Junction%20Flyover%2C%20Jail%20Road%2C%20Nangal%2C%20Kirby%20Place%2C%20Janakpuri%2C%20New%20Delhi%2C%20Delhi%2C%20India%22%2C%22latitude%22%3A28.6104248%2C%22longitude%22%3A77.1141536%2C%22pincode%22%3A%22110010%22%2C%22place_id%22%3A%22ChIJjed7SgAdDTkRxXcRr625DD8%22%2C%22is_city%22%3Afalse%2C%22is_airport%22%3Afalse%2C%22city%22%3A%22Delhi%22%2C%22city_code%22%3Anull%2C%22google_city%22%3Anull%2C%22main_text%22%3Anull%2C%22mainText%22%3Anull%2C%22secondary_text%22%3Anull%2C%22country%22%3A%22India%22%2C%22country_code%22%3A%22IN%22%2C%22state%22%3A%22Delhi%22%2C%22name%22%3Anull%2C%22label%22%3Anull%2C%22city_type%22%3A%22Unknown%22%7D&to=%7B%22locusV2Id%22%3A%22CTKUU%22%2C%22locusV2Type%22%3A%22city%22%2C%22address%22%3A%22Manali%2C%20Himachal%20Pradesh%2C%20India%22%2C%22latitude%22%3A32.2431872%2C%22longitude%22%3A77.1891761%2C%22pincode%22%3Anull%2C%22place_id%22%3A%22ChIJP9A_FgiHBDkRzXZQvg6oKYE%22%2C%22is_city%22%3Atrue%2C%22is_airport%22%3Afalse%2C%22city%22%3A%22Manali%22%2C%22city_code%22%3Anull%2C%22google_city%22%3Anull%2C%22main_text%22%3Anull%2C%22mainText%22%3Anull%2C%22secondary_text%22%3Anull%2C%22country%22%3A%22India%22%2C%22country_code%22%3A%22IN%22%2C%22state%22%3A%22Himachal%20Pradesh%22%2C%22name%22%3Anull%2C%22label%22%3Anull%2C%22city_type%22%3A%22Leisure%22%7D&packageKey=&stopsPlaceIds=%7B%7D&loadListingFunnel=
+  And I click the Search button for cabs                                          # com.goibibo.stepDefs.GoibiboStepDefs.i_click_the_search_button_for_cabs()
+Screenshot saved: test-output/screenshots/step_20260419_140032.png
+No popup visible or already closed
+  And I close any popups on the cab listing page                                  # com.goibibo.stepDefs.GoibiboStepDefs.i_close_any_popups_on_the_cab_listing_page()
+Screenshot saved: test-output/screenshots/step_20260419_140038.png
+No popup visible or already closed
+SUV filter selected
+  And I select the SUV cab type from filters                                      # com.goibibo.stepDefs.GoibiboStepDefs.i_select_the_suv_cab_type_from_filters()
+Screenshot saved: test-output/screenshots/step_20260419_140046.png
+  Then the cab results should be displayed with SUV type                          # com.goibibo.stepDefs.GoibiboStepDefs.the_cab_results_should_be_displayed_with_suv_type()
+Screenshot saved: test-output/screenshots/step_20260419_140048.png
+Screenshot saved: test-output/screenshots/Book_a_one_way_outstation_cab_from_Delhi_Cantt_to_Manali_and_select_SUV_end_20260419_140048.png
+
+@GoibiboTests @HotelBooking
+Scenario: Search for hotels in Manali Mall Road with 4 adults # src/test/resources/features/GoibiboTest.feature:23
+  Given I open the Goibibo website                            # com.goibibo.stepDefs.GoibiboStepDefs.i_open_the_goibibo_website()
+Screenshot saved: test-output/screenshots/step_20260419_140054.png
+Hotels nav click failed, navigating by URL: Expected condition failed: waiting for element to be clickable: By.xpath: //a[contains(@href,'hotel') and (contains(text(),'Hotel') or .//span[contains(text(),'Hotel')])] | //span[normalize-space(text())='Hotels'] | //li//a[contains(text(),'Hotels')] (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.18.1', revision: 'b1d3319b48'
+System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '26.4', java.version: '21.0.9'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 147.0.7727.56, chrome: {chromedriverVersion: 147.0.7727.57 (b4f28b5637d0..., userDataDir: /var/folders/zz/kjx9x1cx2_x...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:55880}, goog:processID: 39761, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:55880/devtoo..., se:cdpVersion: 147.0.7727.56, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: f94c154f47ed72b7467b63bd23d66ea6
+  When I navigate to the Hotels section                       # com.goibibo.stepDefs.GoibiboStepDefs.i_navigate_to_the_hotels_section()
+Screenshot saved: test-output/screenshots/step_20260419_140120.png
+XPath strategies failed, using JavaScript to find hotel input
+  And I enter "Manali Mall Road" in hotel search              # com.goibibo.stepDefs.GoibiboStepDefs.i_enter_in_hotel_search(java.lang.String)
+      java.lang.RuntimeException: Could not find hotel search input on page: https://www.goibibo.com/hotels/
+        at com.goibibo.pages.HotelsPage.findHotelSearchInput(HotelsPage.java:79)
+        at com.goibibo.pages.HotelsPage.enterHotelLocation(HotelsPage.java:88)
+        at com.goibibo.stepDefs.GoibiboStepDefs.i_enter_in_hotel_search(GoibiboStepDefs.java:132)
+        at ✽.I enter "Manali Mall Road" in hotel search(file:///Users/shoebiqbal/Desktop/cucumberBDD/travelingSite-AutomationTesting/goibibo-automation/src/test/resources/features/GoibiboTest.feature:25)
+
+Screenshot saved: test-output/screenshots/step_20260419_140145.png
+  And I select "Mall Road, Manali" from hotel suggestions     # com.goibibo.stepDefs.GoibiboStepDefs.i_select_from_hotel_suggestions(java.lang.String)
+  And I set hotel check-in date to "11/06/2026"               # com.goibibo.stepDefs.GoibiboStepDefs.i_set_hotel_check_in_date_to(java.lang.String)
+  And I set hotel check-out date to "15/06/2026"              # com.goibibo.stepDefs.GoibiboStepDefs.i_set_hotel_check_out_date_to(java.lang.String)
+  And I set number of adults to 4                             # com.goibibo.stepDefs.GoibiboStepDefs.i_set_number_of_adults_to(int)
+  And I click Search for hotels                               # com.goibibo.stepDefs.GoibiboStepDefs.i_click_search_for_hotels()
+  Then the hotel results page should be displayed             # com.goibibo.stepDefs.GoibiboStepDefs.the_hotel_results_page_should_be_displayed()
+Screenshot saved: test-output/screenshots/Search_for_hotels_in_Manali_Mall_Road_with_4_adults_end_20260419_140145.png
+
+@GoibiboTests @GiftCard
+Scenario: Navigate to Gift Cards from the login menu  # src/test/resources/features/GoibiboTest.feature:34
+  Given I open the Goibibo website                    # com.goibibo.stepDefs.GoibiboStepDefs.i_open_the_goibibo_website()
+Screenshot saved: test-output/screenshots/step_20260419_140151.png
+All XPath strategies failed, trying JavaScript to find Login button
+Login button clicked via JavaScript text search
+  When I click on the Login Signup button             # com.goibibo.stepDefs.GoibiboStepDefs.i_click_on_the_login_signup_button()
+Screenshot saved: test-output/screenshots/step_20260419_140221.png
+Gift Cards option not found in menu
+  Then I should see the Gift Cards option in the menu # com.goibibo.stepDefs.GoibiboStepDefs.i_should_see_the_gift_cards_option_in_the_menu()
+      java.lang.AssertionError: Gift Cards option should be visible in the menu dropdown expected [true] but found [false]
+        at org.testng.Assert.fail(Assert.java:111)
+        at org.testng.Assert.failNotEquals(Assert.java:1578)
+        at org.testng.Assert.assertTrue(Assert.java:57)
+        at com.goibibo.stepDefs.GoibiboStepDefs.i_should_see_the_gift_cards_option_in_the_menu(GoibiboStepDefs.java:186)
+        at ✽.I should see the Gift Cards option in the menu(file:///Users/shoebiqbal/Desktop/cucumberBDD/travelingSite-AutomationTesting/goibibo-automation/src/test/resources/features/GoibiboTest.feature:36)
+
+Screenshot saved: test-output/screenshots/step_20260419_140223.png
+  And I click on Gift Cards                           # com.goibibo.stepDefs.GoibiboStepDefs.i_click_on_gift_cards()
+  Then the Gift Cards page should be displayed        # com.goibibo.stepDefs.GoibiboStepDefs.the_gift_cards_page_should_be_displayed()
+Screenshot saved: test-output/screenshots/Navigate_to_Gift_Cards_from_the_login_menu_end_20260419_140223.png
+[ERROR] Tests run: 3, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 182.1 s <<< FAILURE! -- in TestSuite
+[ERROR] com.goibibo.runner.TestRunner.runScenario["Search for hotels in Manali Mall Road with 4 adults", "Goibibo Automation - Cab, Hotel and Gift Card booking flow"](2) -- Time elapsed: 56.50 s <<< FAILURE!
+java.lang.RuntimeException: Could not find hotel search input on page: https://www.goibibo.com/hotels/
+        at com.goibibo.pages.HotelsPage.findHotelSearchInput(HotelsPage.java:79)
+        at com.goibibo.pages.HotelsPage.enterHotelLocation(HotelsPage.java:88)
+        at com.goibibo.stepDefs.GoibiboStepDefs.i_enter_in_hotel_search(GoibiboStepDefs.java:132)
+        at ✽.I enter "Manali Mall Road" in hotel search(file:///Users/shoebiqbal/Desktop/cucumberBDD/travelingSite-AutomationTesting/goibibo-automation/src/test/resources/features/GoibiboTest.feature:25)
+
+[ERROR] com.goibibo.runner.TestRunner.runScenario["Navigate to Gift Cards from the login menu", "Goibibo Automation - Cab, Hotel and Gift Card booking flow"](3) -- Time elapsed: 37.38 s <<< FAILURE!
+java.lang.AssertionError: Gift Cards option should be visible in the menu dropdown expected [true] but found [false]
+        at org.testng.Assert.fail(Assert.java:111)
+        at org.testng.Assert.failNotEquals(Assert.java:1578)
+        at org.testng.Assert.assertTrue(Assert.java:57)
+        at com.goibibo.stepDefs.GoibiboStepDefs.i_should_see_the_gift_cards_option_in_the_menu(GoibiboStepDefs.java:186)
+        at ✽.I should see the Gift Cards option in the menu(file:///Users/shoebiqbal/Desktop/cucumberBDD/travelingSite-AutomationTesting/goibibo-automation/src/test/resources/features/GoibiboTest.feature:36)
+
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   TestRunner.runScenario Gift Cards option should be visible in the menu dropdown expected [true] but found [false]
+[ERROR]   TestRunner.runScenario » Runtime Could not find hotel search input on page: https://www.goibibo.com/hotels/
+[INFO] 
+[ERROR] Tests run: 3, Failures: 2, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  03:04 min
+[INFO] Finished at: 2026-04-19T14:02:31+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.2.5:test (default-test) on project goibibo-automation: There are test failures.
+[ERROR] 
+[ERROR] Please refer to /Users/shoebiqbal/Desktop/cucumberBDD/travelingSite-AutomationTesting/goibibo-automation/target/surefire-reports for the individual test results.
+[ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

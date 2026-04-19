@@ -15,8 +15,10 @@ import java.util.List;
 /**
  * HotelsPage - Page Object for Goibibo Hotels booking.
  *
- * The hotel search input is found using multiple strategies including JavaScript,
- * because Goibibo's React UI renders the input differently depending on page state.
+ * With a fresh browser per scenario, the hotels page at goibibo.com/hotels/
+ * loads properly (no "200 - OK" anti-bot response).
+ *
+ * From the screenshot, the search input has label "Where to" above it.
  */
 public class HotelsPage {
 
@@ -25,21 +27,45 @@ public class HotelsPage {
 
     public HotelsPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(25));
     }
 
     /**
-     * Finds the hotel search input using multiple strategies.
-     * Returns the first visible, clickable text input found.
+     * Finds the hotel "Where to" search input using multiple strategies.
+     * Waits for the page to be fully loaded before searching.
      */
     private WebElement findHotelSearchInput() {
-        // Strategy 1: placeholder-based locators (most reliable when they work)
+
+        // Wait for the page to contain hotel-related content before searching
+        try {
+            wait.until(ExpectedConditions.or(
+                ExpectedConditions.titleContains("Hotel"),
+                ExpectedConditions.urlContains("hotel"),
+                ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(),'Hotel') or contains(text(),'Where to')]"))
+            ));
+        } catch (Exception e) {
+            System.out.println("Page load check: " + e.getMessage());
+        }
+
+        System.out.println("Finding hotel search input. Page title: " + driver.getTitle());
+        System.out.println("Current URL: " + driver.getCurrentUrl());
+
+        // Try locators in order of reliability
         String[] xpaths = {
-            "//input[@placeholder[contains(.,'City') or contains(.,'city') or contains(.,'area') or contains(.,'property') or contains(.,'destination') or contains(.,'hotel')]]",
-            "//input[@id[contains(.,'city') or contains(.,'City') or contains(.,'search') or contains(.,'Search')]]",
-            "//input[@name[contains(.,'city') or contains(.,'search') or contains(.,'query')]]",
+            // From screenshot: label says "Where to" — label-based
+            "//label[contains(text(),'Where to') or contains(text(),'Where To')]/following-sibling::input",
+            "//label[contains(text(),'Where to') or contains(text(),'Where To')]/..//input",
+            // Placeholder-based (if placeholder is set)
+            "//input[@placeholder='Where to' or @placeholder='Where To']",
+            "//input[@placeholder[contains(.,'Where') or contains(.,'where')]]",
+            // Common id/name patterns for hotel city search
+            "//input[@id='city' or @id='hotelCity' or @id='hotel-city' or @id='search_hotel']",
+            "//input[@name='city' or @name='hotelCity' or @name='query']",
+            // Class-based
+            "//input[contains(@class,'city') or contains(@class,'search') or contains(@class,'destination')]",
+            // Inside a container labeled "Hotel"
             "//div[contains(@class,'hotel') or contains(@class,'Hotel')]//input[@type='text']",
-            "//div[contains(@class,'search')]//input[@type='text']",
+            // Broadest fallback — first visible text input
             "(//input[@type='text'])[1]"
         };
 
@@ -54,15 +80,16 @@ public class HotelsPage {
             }
         }
 
-        // Strategy 2: JavaScript — find first visible input that is not hidden
-        System.out.println("XPath strategies failed, using JavaScript to find hotel input");
+        // JavaScript fallback: first visible text input in the TOP HALF of the page (not footer)
+        System.out.println("All XPath strategies failed, trying JavaScript");
         try {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             WebElement input = (WebElement) js.executeScript(
-                "var inputs = document.querySelectorAll('input[type=\"text\"]');" +
+                "var inputs = document.querySelectorAll('input[type=\"text\"], input:not([type])');" +
                 "for(var i=0; i<inputs.length; i++){" +
                 "  var r = inputs[i].getBoundingClientRect();" +
-                "  if(r.width > 0 && r.height > 0 && inputs[i].offsetParent !== null){" +
+                "  if(r.width > 100 && r.height > 20 && r.top < window.innerHeight * 0.6 && inputs[i].offsetParent !== null){" +
+                "    console.log('Found hotel input at position:', r.top, r.left, inputs[i].placeholder);" +
                 "    return inputs[i];" +
                 "  }" +
                 "}" +
@@ -73,10 +100,19 @@ public class HotelsPage {
                 return input;
             }
         } catch (Exception e) {
-            System.out.println("JavaScript input find failed: " + e.getMessage());
+            System.out.println("JavaScript input search failed: " + e.getMessage());
         }
 
-        throw new RuntimeException("Could not find hotel search input on page: " + driver.getCurrentUrl());
+        // If page returned "200 - OK" (bot detection), throw clear error
+        String bodyText = driver.findElement(By.tagName("body")).getText().trim();
+        if (bodyText.equals("200 - OK") || bodyText.isEmpty()) {
+            throw new RuntimeException(
+                "Goibibo returned a blank/bot-blocked page. " +
+                "The fresh browser fix should prevent this. Body: '" + bodyText + "'"
+            );
+        }
+
+        throw new RuntimeException("Could not find hotel search input. Page: " + driver.getTitle());
     }
 
     /**
@@ -88,14 +124,14 @@ public class HotelsPage {
                 WebElement searchInput = findHotelSearchInput();
                 searchInput.click();
                 WaitUtils.hardWait(500);
-                // Clear using JS to avoid stale issues
+                // Clear using JS to avoid event conflicts
                 ((JavascriptExecutor) driver).executeScript("arguments[0].value = ''", searchInput);
                 searchInput.sendKeys(location);
                 WaitUtils.hardWait(2500);
                 System.out.println("Typed hotel location: " + location);
                 return;
             } catch (StaleElementReferenceException e) {
-                System.out.println("Stale element on hotel search input, retry " + (attempt + 1));
+                System.out.println("Stale element retry " + (attempt + 1));
                 WaitUtils.hardWait(1000);
             }
         }
@@ -104,46 +140,50 @@ public class HotelsPage {
 
     /**
      * Selects a suggestion from the hotel search autocomplete dropdown.
+     * From the screenshot: suggestions are in a list below the input.
+     * "Mall Road" appears as "Mall Road - 54 Property - Area"
      */
     public void selectHotelSuggestion(String suggestionText) {
-        By suggestionLocator = By.xpath(
-                "//ul//li[contains(.,'" + suggestionText + "')] | " +
-                "//*[contains(@class,'suggestion') or contains(@class,'autocomplete') or contains(@class,'dropdown')]" +
-                "//*[contains(text(),'" + suggestionText + "')] | " +
-                "//*[contains(text(),'" + suggestionText + "')]"
-        );
-        try {
-            WebElement suggestion = wait.until(ExpectedConditions.visibilityOfElementLocated(suggestionLocator));
-            suggestion.click();
-            WaitUtils.hardWait(1500);
-            System.out.println("Selected hotel suggestion: " + suggestionText);
-        } catch (Exception e) {
-            System.out.println("Hotel suggestion not found: " + suggestionText + " -> " + e.getMessage());
+        // Try matching just the first word or phrase of the suggestion
+        By[] suggestionLocators = {
+            By.xpath("//ul//li[contains(.,'" + suggestionText + "')] | //div[contains(@class,'option')][contains(.,'" + suggestionText + "')]"),
+            By.xpath("//*[contains(@class,'suggestion') or contains(@class,'autocomplete') or contains(@class,'dropdown')]//*[contains(text(),'" + suggestionText + "')]"),
+            By.xpath("//*[contains(text(),'" + suggestionText + "')]")
+        };
+
+        for (By locator : suggestionLocators) {
+            try {
+                WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(6));
+                WebElement suggestion = shortWait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+                suggestion.click();
+                WaitUtils.hardWait(1500);
+                System.out.println("Selected hotel suggestion: " + suggestionText);
+                return;
+            } catch (Exception e) {
+                // try next
+            }
         }
+        System.out.println("Hotel suggestion not found for: " + suggestionText);
     }
 
     /**
-     * Sets check-in date by clicking on the calendar.
-     * Date format: dd/MM/yyyy
+     * Sets check-in date. Date format: dd/MM/yyyy
      */
     public void setCheckInDate(String date) {
-        String[] parts = date.split("/");
-        String day = String.valueOf(Integer.parseInt(parts[0]));
-
+        String day = String.valueOf(Integer.parseInt(date.split("/")[0]));
         try {
+            // The check-in field — click it to open the calendar
             By checkInField = By.xpath(
-                    "//label[contains(text(),'Check') and (contains(text(),'in') or contains(text(),'In'))]/following-sibling::* | " +
-                    "//*[contains(@class,'checkIn') or contains(@class,'checkin') or contains(@class,'check-in')] | " +
-                    "//*[contains(@placeholder,'check-in') or contains(@placeholder,'Check-in')]"
+                "//label[contains(text(),'Check-in') or contains(text(),'Checkin') or contains(text(),'CHECKIN')]/following-sibling::* | " +
+                "//*[contains(@class,'checkIn') or contains(@class,'checkin') or contains(@class,'check-in')]"
             );
             try {
-                WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(5));
-                shortWait.until(ExpectedConditions.elementToBeClickable(checkInField)).click();
+                new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.elementToBeClickable(checkInField)).click();
                 WaitUtils.hardWait(1500);
             } catch (Exception ignore) {
                 System.out.println("Check-in field click skipped");
             }
-
             clickDayInCalendar(day);
         } catch (Exception e) {
             System.out.println("Check-in date error: " + e.getMessage());
@@ -151,69 +191,59 @@ public class HotelsPage {
     }
 
     /**
-     * Sets check-out date. Calendar usually stays open after check-in is picked.
+     * Sets check-out date. Calendar stays open after check-in is selected.
      */
     public void setCheckOutDate(String date) {
-        String[] parts = date.split("/");
-        String day = String.valueOf(Integer.parseInt(parts[0]));
+        String day = String.valueOf(Integer.parseInt(date.split("/")[0]));
         clickDayInCalendar(day);
     }
 
-    /**
-     * Clicks on the given day number in the currently open calendar widget.
-     */
     private void clickDayInCalendar(String day) {
         By[] dayLocators = {
-            By.xpath("//div[contains(@class,'DayPicker') or contains(@class,'Calendar') or contains(@class,'calendar')]//div[not(contains(@class,'disabled'))][@role='gridcell'][normalize-space(text())='" + day + "']"),
+            By.xpath("//div[contains(@class,'DayPicker') or contains(@class,'Calendar') or contains(@class,'calendar')]//div[@role='gridcell'][normalize-space(text())='" + day + "'][not(contains(@class,'disabled'))]"),
             By.xpath("//table//td[not(contains(@class,'disabled')) and not(contains(@class,'prev')) and not(contains(@class,'next'))][normalize-space(text())='" + day + "']"),
-            By.xpath("//div[@class[contains(.,'day')]][not(contains(@class,'disabled'))][normalize-space(text())='" + day + "']"),
-            By.xpath("//*[normalize-space(text())='" + day + "' and not(contains(@class,'disabled'))][@role='button' or @role='gridcell']")
+            By.xpath("//div[contains(@class,'day')][not(contains(@class,'disabled'))][normalize-space(text())='" + day + "']"),
+            By.xpath("//*[@role='button' or @role='gridcell'][normalize-space(text())='" + day + "'][not(contains(@class,'disabled'))]")
         };
-
         for (By locator : dayLocators) {
             try {
-                WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(5));
-                WebElement dayEl = shortWait.until(ExpectedConditions.elementToBeClickable(locator));
+                WebElement dayEl = new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.elementToBeClickable(locator));
                 dayEl.click();
                 WaitUtils.hardWait(1000);
                 System.out.println("Clicked calendar day: " + day);
                 return;
             } catch (Exception e) {
-                // try next locator
+                // try next
             }
         }
-        System.out.println("Could not click day " + day + " in calendar");
+        System.out.println("Could not click calendar day: " + day);
     }
 
     /**
-     * Sets the number of adults to the desired count.
-     * Opens the guests panel, reads the current count, then clicks + to increment.
+     * Sets number of adults. Opens the Guests & Rooms panel, clicks + to add.
      */
     public void setAdults(int desiredCount) {
         try {
-            // Click guests/travellers section to open it
-            By guestsField = By.xpath(
-                    "//*[contains(@class,'guest') or contains(@class,'room') or contains(@class,'traveller')]//input | " +
-                    "//label[contains(text(),'Guest') or contains(text(),'Room') or contains(text(),'Traveller')]/following-sibling::* | " +
-                    "//*[contains(text(),'Guest') or contains(text(),'Room') or contains(text(),'Traveller')][not(self::label)]"
+            // Open guests panel by clicking the Guests & Rooms field
+            By guestsPanel = By.xpath(
+                "//*[contains(text(),'Guest') or contains(text(),'Room') or contains(text(),'Traveller')]" +
+                "[not(self::label)][not(contains(@class,'filter'))]"
             );
             try {
-                WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(5));
-                shortWait.until(ExpectedConditions.elementToBeClickable(guestsField)).click();
+                new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.elementToBeClickable(guestsPanel)).click();
                 WaitUtils.hardWait(1000);
             } catch (Exception e) {
-                System.out.println("Guests field open issue: " + e.getMessage());
+                System.out.println("Guests panel open: " + e.getMessage());
             }
 
             int current = getAdultCount();
-            System.out.println("Current adult count: " + current + ", target: " + desiredCount);
-
+            System.out.println("Adults current=" + current + " target=" + desiredCount);
             for (int i = current; i < desiredCount; i++) {
                 clickAdultPlus();
                 WaitUtils.hardWait(400);
             }
-
-            System.out.println("Adults set to: " + desiredCount);
         } catch (Exception e) {
             System.out.println("setAdults error: " + e.getMessage());
         }
@@ -221,35 +251,30 @@ public class HotelsPage {
 
     private int getAdultCount() {
         try {
-            By countLocator = By.xpath(
-                    "//*[contains(@class,'adult') or contains(text(),'Adult')]" +
-                    "//*[contains(@class,'count') or contains(@class,'value')] | " +
-                    "//span[contains(@class,'count')][1]"
+            List<WebElement> counts = driver.findElements(
+                By.xpath("//*[contains(@class,'adult') or contains(text(),'Adult')]//*[contains(@class,'count')] | " +
+                         "//span[contains(@class,'count')][1]")
             );
-            List<WebElement> counts = driver.findElements(countLocator);
             if (!counts.isEmpty()) {
                 String text = counts.get(0).getText().replaceAll("[^0-9]", "");
                 if (!text.isEmpty()) return Integer.parseInt(text);
             }
         } catch (Exception e) {
-            System.out.println("Could not read adult count: " + e.getMessage());
+            // ignore
         }
         return 1;
     }
 
     private void clickAdultPlus() {
-        By plusLocator = By.xpath(
-                "//div[contains(text(),'Adult') or @class[contains(.,'adult')]]" +
-                "/following-sibling::*//span[text()='+' or text()='＋'] | " +
-                "//div[contains(text(),'Adult') or @class[contains(.,'adult')]]" +
-                "/following-sibling::*//button[text()='+'] | " +
-                "//button[contains(@class,'plus') or contains(@class,'increment')][1] | " +
-                "//span[@role='button'][text()='+'][1]"
-        );
         try {
-            List<WebElement> plusBtns = driver.findElements(plusLocator);
-            if (!plusBtns.isEmpty()) {
-                plusBtns.get(0).click();
+            List<WebElement> plusBtns = driver.findElements(
+                By.xpath("//span[@role='button'][text()='+'] | //button[text()='+'] | //span[text()='+'][1]")
+            );
+            for (WebElement btn : plusBtns) {
+                if (btn.isDisplayed()) {
+                    btn.click();
+                    return;
+                }
             }
         } catch (Exception e) {
             System.out.println("Plus button click failed: " + e.getMessage());
@@ -262,21 +287,20 @@ public class HotelsPage {
     public void clickSearchHotels() {
         By[] searchLocators = {
             By.xpath("//button[normalize-space(text())='Search' or normalize-space(text())='SEARCH']"),
-            By.xpath("//button[contains(@class,'searchbtn') or contains(@class,'search-btn')]"),
-            By.xpath("//div[contains(@class,'searchBtn')]"),
-            By.xpath("//input[@type='submit' and contains(@value,'Search')]")
+            By.xpath("//button[contains(@class,'search') or contains(@class,'Search')]"),
+            By.xpath("//div[contains(@class,'searchBtn') or contains(@class,'search-btn')]"),
+            By.xpath("//input[@type='submit']")
         };
-
         for (By locator : searchLocators) {
             try {
-                WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(5));
-                WebElement search = shortWait.until(ExpectedConditions.elementToBeClickable(locator));
+                WebElement search = new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.elementToBeClickable(locator));
                 ((JavascriptExecutor) driver).executeScript("arguments[0].click()", search);
                 WaitUtils.hardWait(5000);
                 System.out.println("Hotels search clicked, URL: " + driver.getCurrentUrl());
                 return;
             } catch (Exception e) {
-                // Try next locator
+                // try next
             }
         }
         System.out.println("All hotel search button locators failed");
@@ -285,6 +309,6 @@ public class HotelsPage {
     public boolean isHotelResultsDisplayed() {
         WaitUtils.hardWait(2000);
         String url = driver.getCurrentUrl();
-        return url.contains("hotel") || url.contains("manali") || url.contains("result");
+        return url.contains("hotel") && (url.contains("listing") || url.contains("manali") || url.contains("result"));
     }
 }

@@ -24,98 +24,83 @@ public class HomePage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
-    /**
-     * Navigates to the Goibibo home page.
-     */
     public void openWebsite() {
         driver.get("https://www.goibibo.com");
         WaitUtils.hardWait(3000);
     }
 
     /**
-     * Clicks the Hotels link from the home page navigation bar.
-     * Uses the nav link rather than direct URL so the page context is correct.
+     * Navigates to the Hotels page via direct URL.
+     * Fresh browser session ensures Goibibo serves the full page (not "200 - OK").
      */
     public void clickHotels() {
-        // Navigate from home page — click the Hotels nav tab
-        driver.get("https://www.goibibo.com");
-        WaitUtils.hardWait(2000);
-
-        By hotelsNav = By.xpath(
-                "//a[contains(@href,'hotel') and (contains(text(),'Hotel') or .//span[contains(text(),'Hotel')])] | " +
-                "//span[normalize-space(text())='Hotels'] | " +
-                "//li//a[contains(text(),'Hotels')]"
-        );
-        try {
-            WebElement hotelsLink = wait.until(ExpectedConditions.elementToBeClickable(hotelsNav));
-            hotelsLink.click();
-            WaitUtils.hardWait(3000);
-            System.out.println("Clicked Hotels nav link, URL: " + driver.getCurrentUrl());
-        } catch (Exception e) {
-            System.out.println("Hotels nav click failed, navigating by URL: " + e.getMessage());
-            driver.get("https://www.goibibo.com/hotels/");
-            WaitUtils.hardWait(3000);
-        }
+        driver.get("https://www.goibibo.com/hotels/");
+        WaitUtils.hardWait(4000);
+        System.out.println("Hotels page loaded: " + driver.getCurrentUrl());
     }
 
     /**
-     * Clicks the Login / Signup button to open the dropdown.
-     * Tries multiple locator strategies + JavaScript click fallback.
+     * Clicks the Login / Signup button in the TOP-RIGHT header area.
+     *
+     * Problem from previous run: JavaScript text search found "Login Now & Save More"
+     * links inside hotel/flight cards instead of the actual header button.
+     *
+     * Fix: Target only the header area — specifically the element near "Manage Booking".
+     * The Goibibo header always shows "Manage Booking My Trips" to the LEFT of
+     * "Login / Signup" — we use that anchor to find the correct button.
      */
     public void clickLoginSignup() {
-        // Strategy 1: by partial link text / inner span text
-        By[] loginLocators = {
-            By.xpath("//div[contains(@class,'userLogin') or contains(@class,'userIcon') or contains(@class,'login-wrapper')]"),
-            By.xpath("//div[contains(@class,'header')]//button[contains(text(),'Login') or contains(text(),'Sign')]"),
-            By.xpath("//*[@data-cy='login-btn' or @data-testid='login-btn' or @id='login-btn']"),
-            By.xpath("//div[@class[contains(.,'user')]]//span | //div[@class[contains(.,'signIn')]]"),
-            By.xpath("//nav//*[contains(text(),'Login') or contains(text(),'Sign in')]"),
-            By.xpath("//*[normalize-space(text())='Login / Signup']"),
-            By.xpath("//*[contains(text(),'Login') and contains(text(),'Signup')]")
+        // Strategy 1: Find the element NEXT TO "Manage Booking My Trips" in the header
+        // This uniquely identifies the Login/Signup button (not page content)
+        By[] headerLoginLocators = {
+            // Sibling of "Manage Booking" / "My Trips" container
+            By.xpath("//div[.//span[contains(text(),'My Trips')] or .//text()[contains(.,'My Trips')]]/following-sibling::*[1]"),
+            // Button/div with person icon and Login text specifically in header
+            By.xpath("//div[contains(@class,'header')]//div[contains(text(),'Login') or contains(text(),'Signup')]"),
+            By.xpath("//div[contains(@class,'header')]//span[contains(text(),'Login')]"),
+            // Goibibo uses a structure where login is an anchor/div at top right
+            By.xpath("//div[@class[contains(.,'user') or contains(.,'login') or contains(.,'auth')]]" +
+                     "[not(ancestor::div[contains(@class,'result') or contains(@class,'listing') or contains(@class,'card')])]"),
+            // Last anchor/button in the nav area that mentions Login
+            By.xpath("(//nav//a[contains(text(),'Login')] | //nav//button[contains(text(),'Login')])[last()]")
         };
 
-        for (By locator : loginLocators) {
+        for (By locator : headerLoginLocators) {
             try {
-                WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(4));
-                WebElement loginBtn = shortWait.until(ExpectedConditions.elementToBeClickable(locator));
-                loginBtn.click();
+                WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(5));
+                WebElement btn = shortWait.until(ExpectedConditions.elementToBeClickable(locator));
+                btn.click();
                 WaitUtils.hardWait(1500);
-                System.out.println("Clicked login via: " + locator);
+                System.out.println("Header Login button clicked via: " + locator);
                 return;
             } catch (Exception e) {
-                // try next locator
+                // try next strategy
             }
         }
 
-        // Strategy 2: JavaScript click — find first visible element with 'Login' text
-        System.out.println("All XPath strategies failed, trying JavaScript to find Login button");
+        // Strategy 2: JavaScript — find elements with Login text but ONLY in the header/top area
+        // Restricts to elements with y-position less than 150px (top of page)
+        System.out.println("XPath strategies failed, using header-restricted JavaScript");
         try {
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript(
-                "var els = document.querySelectorAll('*');" +
+                "var els = document.querySelectorAll('a, button, div, span');" +
                 "for(var i=0; i<els.length; i++){" +
-                "  var t = els[i].innerText;" +
-                "  if(t && (t.trim()==='Login / Signup' || t.trim()==='Login/Signup' || t.trim()==='Login') && els[i].offsetWidth > 0){" +
+                "  var rect = els[i].getBoundingClientRect();" +
+                "  var t = els[i].innerText ? els[i].innerText.trim() : '';" +
+                "  var isHeader = rect.top < 150 && rect.top > 0 && rect.width > 0;" +
+                "  var hasLogin = t.indexOf('Login') !== -1 || t.indexOf('Signup') !== -1 || t.indexOf('Sign Up') !== -1;" +
+                "  if(isHeader && hasLogin){" +
+                "    console.log('Clicking header login element:', els[i].tagName, t);" +
                 "    els[i].click();" +
                 "    break;" +
                 "  }" +
                 "}"
             );
             WaitUtils.hardWait(1500);
-            System.out.println("Login button clicked via JavaScript text search");
+            System.out.println("Header Login button clicked via JavaScript (top-150px restriction)");
         } catch (Exception e) {
-            System.out.println("JavaScript Login click also failed: " + e.getMessage());
+            System.out.println("JavaScript Login click failed: " + e.getMessage());
         }
-    }
-
-    /**
-     * Returns a list of all visible text values in the currently open dropdown.
-     */
-    public List<WebElement> getDropdownItems() {
-        By dropdownItems = By.xpath(
-                "//div[contains(@class,'dropdown') or contains(@class,'menu') or contains(@class,'popup')]//a | " +
-                "//ul[contains(@class,'drop')]//li"
-        );
-        return driver.findElements(dropdownItems);
     }
 }

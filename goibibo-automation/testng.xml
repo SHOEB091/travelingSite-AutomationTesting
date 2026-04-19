@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<!--
+    testng.xml - TestNG suite configuration file.
+    Runs the Cucumber TestRunner which picks up all feature files and step definitions.
+-->
+<suite name="Goibibo Automation Suite" verbose="1">
+
+    <test name="Goibibo Full Automation Test">
+        <classes>
+            <class name="com.goibibo.runner.TestRunner"/>
+        </classes>
+    </test>
+
+</suite>
